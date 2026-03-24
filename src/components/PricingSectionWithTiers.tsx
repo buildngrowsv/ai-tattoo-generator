@@ -178,7 +178,7 @@ export default function PricingSectionWithTiers() {
              * so the coordinator/BC1 can create it via BCL when ready.
              */}
             <a
-              href="https://buy.stripe.com/test_placeholder"
+              href="https://buy.stripe.com/eVq14ngEhbUYgDN1CVfMA05"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full py-3 px-6 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 transition-all shadow-md shadow-violet-600/20 hover:shadow-violet-500/30 text-center block"
