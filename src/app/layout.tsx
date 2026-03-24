@@ -89,11 +89,12 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     /**
-     * TODO: Update this URL once deployed to production domain.
+     * OG URL set to the Vercel deploy URL (2026-03-24).
      * The OG URL is used for canonical linking — important for SEO
      * to prevent duplicate content issues across different URL variants.
+     * If a custom domain (e.g. tattoo.symplyai.io) is added later, update here.
      */
-    url: "https://inkai.app",
+    url: "https://ai-tattoo-generator.vercel.app",
     siteName: "InkAI - AI Tattoo Design Generator",
   },
   twitter: {
