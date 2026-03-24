@@ -1,0 +1,179 @@
+/**
+ * GLOBAL STYLES — AI Tattoo Design Generator (InkAI)
+ *
+ * DESIGN SYSTEM RATIONALE:
+ * We use a dark-first theme (zinc-950 base) because tattoo design tools
+ * are used by artists and creative professionals who overwhelmingly prefer
+ * dark interfaces. Dark backgrounds also make generated tattoo artwork
+ * "pop" visually — the designs look better against dark surfaces, similar
+ * to how tattoo flash sheets are traditionally displayed on dark walls.
+ *
+ * COLOR PALETTE:
+ * - Background: zinc-950 (#09090b) — near-black, easy on the eyes
+ * - Surface: zinc-900 (#18181b) — cards, inputs, elevated elements
+ * - Primary: purple-to-blue gradient — signals AI/tech innovation while
+ *   feeling creative and artistic (purple = creativity, blue = technology)
+ * - Accents: violet-500 for interactive elements, emerald for success states
+ *
+ * This dark theme approach matches the aesthetic of tools like Midjourney,
+ * DALL-E, and other AI art generators that our target users already use.
+ *
+ * TAILWIND V4 APPROACH:
+ * Instead of a separate tailwind.config.ts, Tailwind v4 uses @theme directives
+ * directly in CSS. This is the new standard pattern.
+ */
+
+@import "tailwindcss";
+
+/**
+ * THEME TOKENS
+ * Defined using Tailwind v4's @theme directive. These map to CSS custom
+ * properties that Tailwind utility classes reference. The dark theme is
+ * applied by default (no .dark class needed) because our entire app is dark.
+ */
+@theme inline {
+  --color-background: #09090b;
+  --color-foreground: #fafafa;
+  --color-card: #18181b;
+  --color-card-foreground: #fafafa;
+  --color-muted: #27272a;
+  --color-muted-foreground: #a1a1aa;
+  --color-border: #27272a;
+  --color-input: #27272a;
+  --color-primary: #8b5cf6;
+  --color-primary-foreground: #fafafa;
+  --color-secondary: #3f3f46;
+  --color-secondary-foreground: #fafafa;
+  --color-accent: #27272a;
+  --color-accent-foreground: #fafafa;
+  --color-destructive: #ef4444;
+  --color-ring: #8b5cf6;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+}
+
+/**
+ * CUSTOM UTILITY CLASSES
+ *
+ * These power the key visual effects throughout the landing page.
+ * Keeping them as CSS utilities (rather than inline Tailwind) because:
+ * 1. They're reused across multiple components
+ * 2. They involve keyframe animations that Tailwind can't express
+ * 3. They're complex enough that inline styles would be unreadable
+ */
+@layer utilities {
+  /**
+   * Animated gradient text — the hero headline effect.
+   * Uses a purple-to-blue-to-purple gradient that slowly shifts,
+   * creating a "living" feel that draws the eye. This is the same
+   * technique used by Stripe, Linear, and Vercel on their landing pages.
+   * The animation is subtle (6s duration) to avoid being distracting.
+   */
+  .gradient-text-animated {
+    background: linear-gradient(
+      135deg,
+      #8b5cf6,
+      #6366f1,
+      #3b82f6,
+      #8b5cf6
+    );
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-shift 6s ease infinite;
+  }
+
+  /**
+   * Static gradient text — for section headings that don't need animation.
+   * Same colors but no animation to keep the page from feeling too busy.
+   */
+  .gradient-text-static {
+    background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /**
+   * Hero background pattern — subtle dot grid that adds depth.
+   * The dots use the primary color at very low opacity (5%) so they're
+   * barely visible but add a "tech/grid" feel to the hero section.
+   * This is a common pattern in SaaS landing pages.
+   */
+  .hero-dot-pattern {
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(139, 92, 246, 0.07) 1px,
+      transparent 0
+    );
+    background-size: 32px 32px;
+  }
+
+  /**
+   * Gradient border effect — used on the main generator card.
+   * Creates a glowing border effect using a pseudo-element gradient.
+   * This makes the generator form feel special and "elevated" compared
+   * to regular UI elements, drawing the user's attention to the primary
+   * interaction point.
+   */
+  .glow-border {
+    position: relative;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    box-shadow:
+      0 0 20px rgba(139, 92, 246, 0.1),
+      0 0 60px rgba(139, 92, 246, 0.05);
+  }
+
+  /**
+   * Shimmer loading effect — used on the generate button during processing.
+   * A horizontal sweep animation that communicates "working" without being
+   * as intrusive as a spinner. Users see this while waiting for fal.ai to
+   * generate their tattoo design.
+   */
+  .shimmer-loading {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(139, 92, 246, 0.15),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: shimmer-sweep 1.5s ease infinite;
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes shimmer-sweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
