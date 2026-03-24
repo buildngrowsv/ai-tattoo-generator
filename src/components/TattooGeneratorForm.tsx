@@ -53,6 +53,7 @@ import {
   Paintbrush,
   MapPin,
   Maximize2,
+  Crown,
 } from "lucide-react";
 
 /**
@@ -158,6 +159,55 @@ interface GenerationError {
  * - Loading state shows a shimmer effect on the generate button
  * - Error state shows an alert with the error message
  */
+/**
+ * DAILY_FREE_GENERATION_LIMIT — Maximum free generations per day.
+ *
+ * WHY 3 (not 1, not 5, not 10):
+ * - 1 is too stingy — users can't meaningfully explore the tool
+ * - 5+ is too generous — most users won't feel the need to upgrade
+ * - 3 is the sweet spot: enough to see value, not enough for heavy use
+ * - At ~$0.03/generation, 3 free/day costs us ~$0.09/user/day max
+ * - Power users (tattoo artists testing many ideas) hit the limit fast
+ *   and have the strongest motivation to pay $9.90/mo
+ *
+ * STORAGE: localStorage keyed by date string (YYYY-MM-DD).
+ * This is CLIENT-SIDE ONLY — it's a UX gate, not a security boundary.
+ * Real enforcement happens server-side via IP rate limiting in the API route.
+ * A determined user could clear localStorage to bypass this, which is fine:
+ * they still hit the server-side rate limit, and the friction of clearing
+ * storage repeatedly is enough to convert most users to Pro.
+ */
+const DAILY_FREE_GENERATION_LIMIT = 3;
+
+/**
+ * getLocalStorageUsageKey — Returns the localStorage key for today's usage count.
+ * Format: "tattoo-gen-usage-2026-03-24" so it auto-expires daily.
+ */
+function getLocalStorageUsageKey(): string {
+  const todayDateString = new Date().toISOString().split("T")[0];
+  return `tattoo-gen-usage-${todayDateString}`;
+}
+
+/**
+ * getTodayGenerationCount — Reads today's generation count from localStorage.
+ * Returns 0 if no usage recorded yet (new day, cleared storage, first visit).
+ */
+function getTodayGenerationCount(): number {
+  if (typeof window === "undefined") return 0;
+  const storedCountString = localStorage.getItem(getLocalStorageUsageKey());
+  return storedCountString ? parseInt(storedCountString, 10) : 0;
+}
+
+/**
+ * incrementTodayGenerationCount — Bumps today's usage count by 1.
+ * Called after a successful generation (not on error or rate limit).
+ */
+function incrementTodayGenerationCount(): void {
+  if (typeof window === "undefined") return;
+  const currentCount = getTodayGenerationCount();
+  localStorage.setItem(getLocalStorageUsageKey(), String(currentCount + 1));
+}
+
 export default function TattooGeneratorForm() {
   /**
    * Form state — controlled inputs for all form fields.
@@ -178,6 +228,32 @@ export default function TattooGeneratorForm() {
   const [isCurrentlyGenerating, setIsCurrentlyGenerating] = useState(false);
   const [generationResult, setGenerationResult] = useState<GenerationResult | null>(null);
   const [generationError, setGenerationError] = useState<GenerationError | null>(null);
+
+  /**
+   * Usage tracking state — shows remaining free generations and upgrade prompt.
+   *
+   * WHY useState + useEffect (not just reading localStorage directly):
+   * - localStorage reads are synchronous but not available during SSR
+   * - We need to re-render the UI when the count changes (after generation)
+   * - The count display in the UI needs to be reactive
+   *
+   * hasReachedDailyFreeLimit gates the generate button and shows the upgrade CTA.
+   * todayUsageCount is displayed as "X of 3 free generations used today".
+   */
+  const [todayUsageCount, setTodayUsageCount] = useState(0);
+  const [hasReachedDailyFreeLimit, setHasReachedDailyFreeLimit] = useState(false);
+
+  /**
+   * Initialize usage count from localStorage on mount.
+   * Must be in useEffect because localStorage is not available during SSR.
+   */
+  useState(() => {
+    if (typeof window !== "undefined") {
+      const count = getTodayGenerationCount();
+      setTodayUsageCount(count);
+      setHasReachedDailyFreeLimit(count >= DAILY_FREE_GENERATION_LIMIT);
+    }
+  });
 
   /**
    * handleGenerateTattooDesign — Submits the form to /api/generate.
@@ -202,6 +278,28 @@ export default function TattooGeneratorForm() {
       setGenerationError({
         error: "Missing description",
         message: "Please describe your tattoo idea before generating.",
+      });
+      return;
+    }
+
+    /**
+     * USAGE GATE — Check if user has exceeded free daily limit.
+     *
+     * This is the client-side UX gate. When the user hits 3/day, we show
+     * an upgrade prompt instead of making the API call. This saves server
+     * costs (no wasted fal.ai calls) and creates a clear conversion moment.
+     *
+     * Server-side rate limiting in /api/generate is the real enforcement.
+     * This client-side check is for UX — showing a friendly upgrade prompt
+     * instead of a generic "rate limited" error.
+     */
+    const currentUsageCount = getTodayGenerationCount();
+    if (currentUsageCount >= DAILY_FREE_GENERATION_LIMIT) {
+      setHasReachedDailyFreeLimit(true);
+      setTodayUsageCount(currentUsageCount);
+      setGenerationError({
+        error: "Daily limit reached",
+        message: `You've used all ${DAILY_FREE_GENERATION_LIMIT} free generations today. Upgrade to Pro for unlimited tattoo designs at $9.90/mo.`,
       });
       return;
     }
@@ -238,8 +336,16 @@ export default function TattooGeneratorForm() {
         /**
          * Success — store the result for display.
          * The result contains imageUrl, prompt, width, and height.
+         *
+         * USAGE TRACKING: Increment the daily count AFTER a successful generation.
+         * We don't count failed attempts — that would be unfair to users who hit
+         * a server error. Only actual successful generations consume a "credit".
          */
         setGenerationResult(responseData as GenerationResult);
+        incrementTodayGenerationCount();
+        const newCount = getTodayGenerationCount();
+        setTodayUsageCount(newCount);
+        setHasReachedDailyFreeLimit(newCount >= DAILY_FREE_GENERATION_LIMIT);
       }
     } catch (networkError) {
       /**
@@ -419,24 +525,55 @@ export default function TattooGeneratorForm() {
               The gradient (purple-to-blue) matches the brand identity and
               stands out clearly against the dark card background.
               ============================================================ */}
-          <button
-            type="button"
-            onClick={handleGenerateTattooDesign}
-            disabled={isCurrentlyGenerating}
-            className="w-full py-4 px-6 rounded-xl text-base font-semibold text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-violet-600/25 hover:shadow-violet-500/35 flex items-center justify-center gap-2"
-          >
-            {isCurrentlyGenerating ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Generating Your Tattoo Design...
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-5 h-5" />
-                Generate Design
-              </>
+          {/* ============================================================
+              USAGE COUNTER — Shows remaining free generations.
+
+              Displays "X of 3 free generations used today" below the button.
+              When limit is reached, the button changes to an upgrade CTA
+              that links to the pricing section (smooth scroll).
+
+              WHY SHOW THE COUNTER (not just block silently):
+              Transparency builds trust. Users who can SEE their remaining
+              credits are more likely to value each generation and more
+              receptive to the upgrade prompt when the limit hits. This is
+              the same pattern used by ChatGPT, Canva, and Midjourney.
+              ============================================================ */}
+          {hasReachedDailyFreeLimit ? (
+            <a
+              href="#pricing"
+              className="w-full py-4 px-6 rounded-xl text-base font-semibold text-white bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 transition-all duration-200 shadow-lg shadow-amber-600/25 hover:shadow-amber-500/35 flex items-center justify-center gap-2"
+            >
+              <Crown className="w-5 h-5" />
+              Upgrade to Pro — Unlimited Designs
+            </a>
+          ) : (
+            <button
+              type="button"
+              onClick={handleGenerateTattooDesign}
+              disabled={isCurrentlyGenerating}
+              className="w-full py-4 px-6 rounded-xl text-base font-semibold text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-violet-600/25 hover:shadow-violet-500/35 flex items-center justify-center gap-2"
+            >
+              {isCurrentlyGenerating ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Generating Your Tattoo Design...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5" />
+                  Generate Design
+                </>
+              )}
+            </button>
+          )}
+
+          {/* Free tier usage counter — always visible so users know their remaining credits */}
+          <p className="text-center text-sm text-zinc-400 mt-2">
+            {todayUsageCount} of {DAILY_FREE_GENERATION_LIMIT} free generations used today
+            {todayUsageCount > 0 && todayUsageCount < DAILY_FREE_GENERATION_LIMIT && (
+              <span className="text-zinc-500"> — {DAILY_FREE_GENERATION_LIMIT - todayUsageCount} remaining</span>
             )}
-          </button>
+          </p>
         </div>
       </div>
 

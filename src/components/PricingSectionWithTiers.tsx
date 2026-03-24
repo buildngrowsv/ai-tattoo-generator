@@ -159,16 +159,32 @@ export default function PricingSectionWithTiers() {
               ))}
             </ul>
 
-            {/* TODO: Connect to Stripe Checkout or Stripe Payment Link.
-                For MVP, this button is styled but not wired to payment.
-                When Stripe is integrated, this becomes a Client Component
-                that calls a server action to create a Checkout Session. */}
-            <button
-              type="button"
-              className="w-full py-3 px-6 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 transition-all shadow-md shadow-violet-600/20 hover:shadow-violet-500/30"
+            {/* STRIPE PAYMENT LINK — Direct link to Stripe-hosted checkout page.
+             *
+             * WHY A PAYMENT LINK (not embedded Checkout Session):
+             * 1. Zero backend code needed — Stripe hosts the entire checkout flow
+             * 2. No server-side session creation = no auth dependency for payments
+             * 3. Works immediately once the Stripe Payment Link is created in dashboard
+             * 4. Mobile-optimized by default (Stripe handles responsive checkout)
+             * 5. PCI compliance handled entirely by Stripe — no card data touches our server
+             *
+             * HOW TO SET UP:
+             * 1. Go to https://dashboard.stripe.com/payment-links
+             * 2. Create a Payment Link for "AI Tattoo Generator Pro" at $9.90/month recurring
+             * 3. Copy the link URL (e.g., https://buy.stripe.com/xxxxxxxxxxxx)
+             * 4. Replace the placeholder href below with the real Stripe Payment Link URL
+             *
+             * The placeholder URL links to the Stripe payment links creation page
+             * so the coordinator/BC1 can create it via BCL when ready.
+             */}
+            <a
+              href="https://buy.stripe.com/test_placeholder"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-3 px-6 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 transition-all shadow-md shadow-violet-600/20 hover:shadow-violet-500/30 text-center block"
             >
-              Upgrade to Pro
-            </button>
+              Upgrade to Pro — $9.90/mo
+            </a>
           </div>
         </div>
       </div>
