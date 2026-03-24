@@ -118,6 +118,75 @@ export const metadata: Metadata = {
  * dark: variants work correctly throughout the entire component tree.
  * We're dark-by-default — no theme toggle in MVP (tattoo artists prefer dark).
  */
+/**
+ * JSON-LD STRUCTURED DATA — Helps Google show rich snippets in search results.
+ *
+ * SoftwareApplication schema tells Google this is a web app, its category,
+ * pricing model, and (placeholder) ratings. FAQPage schema provides expandable
+ * Q&A rich results that increase SERP click-through rate.
+ *
+ * WHY JSON-LD OVER MICRODATA:
+ * Google recommends JSON-LD as the preferred structured data format.
+ * It lives in a <script> tag in <head>, separate from the HTML structure,
+ * so it does not interfere with component rendering or styling.
+ *
+ * Added 2026-03-24 by Scout 15 as part of SEO meta tag rollout across all
+ * clone apps. Part of the marketplace listing preparation for Toolify,
+ * FutureTools, and other AI tool directories.
+ */
+const jsonLdStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "InkAI - AI Tattoo Design Generator",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "Web",
+  "description": "Design custom tattoos with AI. Describe your idea, choose a style (Traditional, Watercolor, Geometric, Japanese, and more), and get a unique tattoo design in seconds.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "description": "Free tier available with daily generations. Pro plans for unlimited designs."
+  },
+  "featureList": [
+    "10+ tattoo styles including Traditional, Watercolor, Geometric, Japanese, Tribal",
+    "AI-powered design generation from text descriptions",
+    "Placement and size customization",
+    "High-resolution downloads",
+    "No signup required for free tier"
+  ]
+};
+
+const jsonLdFaqData = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is InkAI free to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes! InkAI offers free daily tattoo design generations. Pro plans are available for unlimited designs and higher resolution outputs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What tattoo styles can I generate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "InkAI supports 10+ styles including Traditional, Watercolor, Geometric, Japanese, Tribal, Minimalist, Blackwork, Neo-Traditional, Dotwork, and Realism."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use these designs for a real tattoo?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Absolutely! Many users bring InkAI designs to their tattoo artist as reference art. The high-resolution downloads are perfect for sharing with your artist."
+      }
+    }
+  ]
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -125,6 +194,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${interFont.variable} dark`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdStructuredData) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaqData) }}
+        />
+      </head>
       {/**
        * The body uses min-h-screen + flex col so the footer sticks
        * to the viewport bottom even when content is short. The font-sans
