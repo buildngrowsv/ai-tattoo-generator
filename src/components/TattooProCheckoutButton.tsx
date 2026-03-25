@@ -45,8 +45,15 @@ export function TattooProCheckoutButton({ label }: TattooProCheckoutButtonProps)
       // Redirect to Stripe-hosted checkout page
       window.location.href = json.url;
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong.");
-      setLoading(false);
+      // Payment Link fallback: AI Tattoo Generator Pro ($9.99/mo) — no env vars needed.
+      // When STRIPE_SECRET_KEY or STRIPE_PRICE_ID_PRO is not configured on Vercel,
+      // the create-checkout route returns an error. Rather than showing a confusing
+      // error to the user, fall back to the pre-built Stripe Payment Link which
+      // handles the full checkout without a server-side checkout session.
+      // Source: Github/ai-clone-stripe-links.md — Builder 6 pane1774 2026-03-25.
+      console.error("Stripe checkout API failed, falling back to Payment Link:", e);
+      window.location.href = "https://buy.stripe.com/eVq14ngEhbUYgDN1CVfMA05";
+      // Don't reset loading — keep button disabled during Payment Link navigation
     }
     // Don't reset loading after redirect — keeps button disabled during navigation
   }
