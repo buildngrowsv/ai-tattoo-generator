@@ -34,6 +34,33 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
+/* ------------------------------------------------------------------ */
+/*  Simple in-memory IP-based rate limiter                             */
+/*                                                                     */
+/*  WHY THIS EXISTS (2026-03-25 P0 hardening, Builder 6):             */
+/*  This route calls our paid fal.ai API with no auth gate. Without   */
+/*  rate limiting, a bot could run up API costs in minutes. Sliding   */
+/*  window of 5 req/min per IP. Resets on Vercel redeploy; not        */
+/*  global across serverless instances — upgrade to KV for prod.      */
+/* ------------------------------------------------------------------ */
+
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const MAX_REQUESTS_PER_WINDOW = 5;
+const requestLog = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const timestamps = requestLog.get(ip) ?? [];
+  const recent = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+  if (recent.length >= MAX_REQUESTS_PER_WINDOW) {
+    requestLog.set(ip, recent);
+    return true;
+  }
+  recent.push(now);
+  requestLog.set(ip, recent);
+  return false;
+}
+
 /**
  * TattooGenerationRequestBody — The shape of the POST request body.
  *
@@ -165,6 +192,20 @@ function constructTattooPromptFromUserInputs(
  */
 export async function POST(request: NextRequest) {
   try {
+    /**
+     * Server-side IP rate limit — 5 requests per 60s per IP.
+     * Must happen before parsing the body and before any fal.ai call
+     * so rate-limited requests incur zero API cost.
+     */
+    const forwardedFor = request.headers.get("x-forwarded-for");
+    const ip = forwardedFor?.split(",")[0]?.trim() ?? "unknown";
+    if (isRateLimited(ip)) {
+      return NextResponse.json(
+        { error: "Too many requests. Please wait a minute before generating again." },
+        { status: 429 }
+      );
+    }
+
     /**
      * Parse and validate the request body.
      * We check for all required fields upfront to provide clear error messages.
