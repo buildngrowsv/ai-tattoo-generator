@@ -42,7 +42,7 @@ function getStripe(): Stripe {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const StripeClass = require("stripe") as typeof import("stripe").default;
     _stripe = new StripeClass(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: "2026-02-25.clover",
+      apiVersion: "2025-02-24.acacia",
     });
   }
   return _stripe;
