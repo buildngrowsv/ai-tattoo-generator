@@ -1,7 +1,7 @@
 /**
  * POST /api/stripe/create-checkout
  *
- * Creates a Stripe Checkout session for the Pro plan ($7.99/month).
+ * Creates a Stripe Checkout session for the Pro plan ($9.90/month).
  * Returns { url } for client-side redirect to the Stripe-hosted checkout page.
  *
  * WHY direct fetch instead of Stripe SDK:
@@ -16,7 +16,7 @@
  * time in CI (no secrets injected). We guard at request time so next build passes.
  *
  * Accepted body: { plan: "pro" }
- *   - "pro" → $7.99/month recurring subscription
+ *   - "pro" → active Pro subscription using the configured Stripe price
  *
  * Env vars required at runtime (not build time):
  *   STRIPE_SECRET_KEY       — Stripe secret key (sk_live_... or sk_test_...)
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     if (!secretKey) {
       return NextResponse.json(
         { error: "STRIPE_SECRET_KEY is not configured. Add it to your Vercel environment." },
-        { status: 500 }
+        { status: 503 }
       );
     }
 
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
           error:
             "Stripe price ID for this plan is not configured. Set STRIPE_PRICE_ID_PRO in your environment.",
         },
-        { status: 500 }
+        { status: 503 }
       );
     }
 
@@ -79,9 +79,9 @@ export async function POST(request: Request) {
      * Stripe recognizes and substitutes the session ID. We build the body manually
      * and explicitly keep the Stripe template variable un-encoded.
      */
-    // Simple success/cancel URLs — no {CHECKOUT_SESSION_ID} template needed for MVP
-    // (we don't have a DB to look up sessions by ID; Stripe confirmation email handles receipt)
-    const successUrl = `${appUrl}/success?plan=${encodeURIComponent(plan)}`;
+    // Redirect back to a real page in this app. The repo does not have a dedicated
+    // /success route, so sending users there would create a post-payment 404.
+    const successUrl = `${appUrl}/?checkout=success&plan=${encodeURIComponent(plan)}`;
     const cancelUrl = `${appUrl}/pricing`;
 
     // Build form-encoded body with encodeURIComponent on each value

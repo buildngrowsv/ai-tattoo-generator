@@ -1,14 +1,16 @@
 /**
  * POST /api/stripe/webhook
  *
- * Receives Stripe webhook events and processes successful checkout sessions.
- * Currently logs the event; extend to write to a database when auth + DB are added.
+ * Receives Stripe webhook events and verifies that they really came from Stripe.
+ * This repo still has no account database, so entitlement-bearing events must
+ * fail closed instead of returning a false-success 200 that implies Pro access
+ * was granted when nothing was actually persisted.
  *
- * WHY direct fetch for Stripe verification instead of SDK:
- * The stripe npm SDK exhibits network failures on Vercel serverless functions
- * in some regions ("An error occurred with our connection to Stripe. Request was
- * retried N times."). We use the SDK only for `constructEvent` (HMAC verification,
- * which is pure CPU — no network) and skip the SDK's HTTP stack for everything else.
+ * WHY Stripe SDK is safe here:
+ * The checkout routes use raw fetch because the Stripe SDK's network client has
+ * been flaky in Vercel serverless. Webhook verification is different: Stripe's
+ * `constructEvent` helper is pure local HMAC verification and does not depend on
+ * Stripe network calls, so it is the most reliable way to verify signatures.
  *
  * WHY raw body: Stripe signature verification requires the exact raw request bytes —
  * not parsed JSON. Next.js App Router provides `request.text()` for this.
@@ -27,56 +29,40 @@
  */
 
 import { NextResponse } from "next/server";
+import Stripe from "stripe";
 
 /** Required so Next.js reads the raw request body (not a pre-parsed stream) */
 export const dynamic = "force-dynamic";
 
-/**
- * Lightweight HMAC-SHA256 signature verification without the Stripe SDK.
- * Replicates Stripe's constructEvent logic: compute HMAC over timestamp.payload
- * and compare to the signature in the Stripe-Signature header.
- * https://stripe.com/docs/webhooks/signatures#verify-manually
- */
-async function verifyStripeSignature(
-  rawBody: string,
-  sigHeader: string,
-  secret: string
-): Promise<boolean> {
-  const parts = Object.fromEntries(
-    sigHeader.split(",").map((part) => part.split("=") as [string, string])
-  );
-  const timestamp = parts["t"];
-  const signature = parts["v1"];
-  if (!timestamp || !signature) return false;
+let lazyStripeClient: Stripe | null = null;
 
-  const payload = `${timestamp}.${rawBody}`;
-  const encoder = new TextEncoder();
-  const keyData = encoder.encode(secret);
-  const messageData = encoder.encode(payload);
-
-  const cryptoKey = await crypto.subtle.importKey(
-    "raw",
-    keyData,
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"]
-  );
-  const signatureBuffer = await crypto.subtle.sign("HMAC", cryptoKey, messageData);
-  const computed = Array.from(new Uint8Array(signatureBuffer))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-
-  // Timing-safe comparison: same length strings only
-  if (computed.length !== signature.length) return false;
-  let diff = 0;
-  for (let i = 0; i < computed.length; i++) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    diff |= computed.charCodeAt(i) ^ signature.charCodeAt(i)!;
+function getStripeClient(): Stripe | null {
+  if (lazyStripeClient) {
+    return lazyStripeClient;
   }
-  return diff === 0;
+
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+  if (!stripeSecretKey) {
+    console.error("[webhook] STRIPE_SECRET_KEY is not configured.");
+    return null;
+  }
+
+  lazyStripeClient = new Stripe(stripeSecretKey, {
+    apiVersion: "2025-02-24.acacia" as Stripe.LatestApiVersion,
+  });
+
+  return lazyStripeClient;
 }
 
 export async function POST(request: Request) {
+  const stripe = getStripeClient();
+  if (!stripe) {
+    return NextResponse.json(
+      { error: "Stripe is not configured." },
+      { status: 503 }
+    );
+  }
+
   const sig = request.headers.get("stripe-signature");
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -86,7 +72,7 @@ export async function POST(request: Request) {
     );
     return NextResponse.json(
       { error: "Missing signature or webhook secret." },
-      { status: 400 }
+      { status: 503 }
     );
   }
 
@@ -97,45 +83,61 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Could not read request body." }, { status: 400 });
   }
 
-  // Verify HMAC signature using native Web Crypto API (no SDK network calls)
-  const isValid = await verifyStripeSignature(rawBody, sig, webhookSecret);
-  if (!isValid) {
-    console.error("[webhook] Signature verification failed — possible tampered payload");
-    return NextResponse.json({ error: "Webhook signature verification failed." }, { status: 400 });
-  }
-
-  let event: { type: string; data: { object: Record<string, unknown> } };
+  let event: Stripe.Event;
   try {
-    event = JSON.parse(rawBody) as typeof event;
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON in webhook body." }, { status: 400 });
-  }
-
-  // Process events we care about
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
-    const plan = (session.metadata as Record<string, string> | null)?.plan;
-    const customerId = session.customer as string | null;
-    const amountTotal = session.amount_total as number | null;
-    const customerDetails = session.customer_details as { email?: string } | null;
-    const customerEmail = customerDetails?.email;
-
-    console.log(
-      `[webhook] checkout.session.completed — plan=${plan} customer=${customerId} email=${customerEmail} amount=${amountTotal}`
+    event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
+  } catch (verificationError) {
+    const message =
+      verificationError instanceof Error
+        ? verificationError.message
+        : "Webhook signature verification failed.";
+    console.error("[webhook] Signature verification failed:", message);
+    return NextResponse.json(
+      { error: "Webhook signature verification failed." },
+      { status: 400 }
     );
-
-    /**
-     * EXTEND HERE: When you add a database (Neon/Supabase/Convex):
-     *   1. Look up user by session.customer_email or session.customer
-     *   2. If plan === "pro" → set subscription_active = true, record period_end
-     *   3. Send welcome email via Resend/Postmark
-     *   4. Return 200 to acknowledge receipt to Stripe
-     *
-     * For current MVP (no auth/DB): the success page can show a confirmation
-     * and collect email for a manual onboarding flow.
-     */
   }
 
-  // Acknowledge receipt — Stripe retries if we return non-2xx
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object as Stripe.Checkout.Session;
+    const plan = session.metadata?.plan;
+    const customerId =
+      typeof session.customer === "string" ? session.customer : null;
+    const amountTotal = session.amount_total;
+    const customerEmail = session.customer_details?.email ?? null;
+
+    console.error(
+      `[webhook] checkout.session.completed received without entitlement backend — plan=${plan} customer=${customerId} email=${customerEmail} amount=${amountTotal}`
+    );
+    return NextResponse.json(
+      {
+        error:
+          "Checkout completed but no entitlement backend is configured. " +
+          "Provision a database-backed subscription flow before acknowledging this event.",
+      },
+      { status: 503 }
+    );
+  }
+
+  if (
+    event.type === "customer.subscription.created" ||
+    event.type === "customer.subscription.updated" ||
+    event.type === "customer.subscription.deleted" ||
+    event.type === "invoice.paid" ||
+    event.type === "invoice.payment_failed"
+  ) {
+    console.error(
+      `[webhook] ${event.type} received without entitlement backend — failing closed`
+    );
+    return NextResponse.json(
+      {
+        error:
+          "Subscription lifecycle event received but no entitlement backend is configured.",
+      },
+      { status: 503 }
+    );
+  }
+
+  // Non-entitlement events can be acknowledged safely.
   return NextResponse.json({ received: true }, { status: 200 });
 }
