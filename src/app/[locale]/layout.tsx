@@ -10,6 +10,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import "../globals.css";
 
 const interFont = Inter({
@@ -146,7 +147,11 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
         />
       </head>
       <body className="min-h-screen flex flex-col font-sans">
-        <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider messages={messages}>
+          {/* Language switcher — EN | ES toggle, visible on all pages */}
+          <LanguageSwitcher locale={locale} />
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );
