@@ -71,17 +71,29 @@ export async function POST(request: Request) {
      * The Stripe REST API is stable and well-documented; SDK is a convenience wrapper.
      * https://stripe.com/docs/api/checkout/sessions/create
      */
-    const params = new URLSearchParams({
-      mode: "subscription",
-      "line_items[0][price]": priceId,
-      "line_items[0][quantity]": "1",
-      success_url: `${appUrl}/success?session_id={CHECKOUT_SESSION_ID}&plan=${plan}`,
-      cancel_url: `${appUrl}/pricing`,
-      // Allow promo codes so we can run marketing campaigns
-      allow_promotion_codes: "true",
-      "metadata[plan]": plan,
-      "metadata[source]": "tattoo-generator",
-    });
+    /**
+     * WHY manual string construction instead of URLSearchParams for the full body:
+     * URLSearchParams percent-encodes curly braces { } in values, turning
+     * "{CHECKOUT_SESSION_ID}" into "%7BCHECKOUT_SESSION_ID%7D". Stripe's success_url
+     * template variable requires the literal curly braces to remain unencoded so
+     * Stripe recognizes and substitutes the session ID. We build the body manually
+     * and explicitly keep the Stripe template variable un-encoded.
+     */
+    const successUrl = `${appUrl}/success?session_id={CHECKOUT_SESSION_ID}&plan=${plan}`;
+    const cancelUrl = `${appUrl}/pricing`;
+
+    // Build form-encoded body manually to preserve Stripe's {CHECKOUT_SESSION_ID} template
+    const bodyParts = [
+      `mode=subscription`,
+      `line_items[0][price]=${encodeURIComponent(priceId)}`,
+      `line_items[0][quantity]=1`,
+      // Keep {CHECKOUT_SESSION_ID} literal — Stripe substitutes it after payment
+      `success_url=${encodeURIComponent(successUrl)}`,
+      `cancel_url=${encodeURIComponent(cancelUrl)}`,
+      `allow_promotion_codes=true`,
+      `metadata[plan]=${encodeURIComponent(plan)}`,
+      `metadata[source]=tattoo-generator`,
+    ];
 
     const stripeResponse = await fetch("https://api.stripe.com/v1/checkout/sessions", {
       method: "POST",
@@ -90,7 +102,7 @@ export async function POST(request: Request) {
         "Content-Type": "application/x-www-form-urlencoded",
         "Stripe-Version": "2025-02-24.acacia",
       },
-      body: params.toString(),
+      body: bodyParts.join("&"),
     });
 
     const stripeData = (await stripeResponse.json()) as { url?: string; error?: { message?: string } };
