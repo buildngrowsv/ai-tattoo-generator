@@ -1,62 +1,30 @@
 /**
  * POST /api/stripe/create-checkout
  *
- * Creates a Stripe Checkout session for the Pro plan ($9.90/month).
+ * Creates a Stripe Checkout session for the Pro plan ($7.99/month).
  * Returns { url } for client-side redirect to the Stripe-hosted checkout page.
  *
- * WHY lazy Stripe init: process.env.STRIPE_SECRET_KEY is undefined at build
- * time in CI (no secrets injected), so `new Stripe(undefined!)` would throw
- * during next build. Lazy init defers the error to request time, which is the
- * standard pattern for env-dependent service clients in Next.js App Router.
- * Reference: ai-chart-generator commit 48daace (T35, Builder 10).
+ * WHY direct fetch instead of Stripe SDK:
+ * The stripe npm package (v17 and v20) exhibits network connectivity failures
+ * when called from Vercel serverless functions in some regions — error:
+ * "An error occurred with our connection to Stripe. Request was retried N times."
+ * Direct fetch() to api.stripe.com works reliably from the same environment.
+ * This is a known Stripe SDK + Vercel edge runtime compatibility issue.
+ * Reference: ai-chart-generator T35 used SDK (same issue), direct fetch resolves it.
  *
- * WHY a server-side API route instead of buy.stripe.com payment link:
- * Server-side checkout sessions let us pass metadata (userId, plan), configure
- * dynamic success/cancel URLs per environment (preview vs prod), and handle
- * webhook events that update user state (credits, subscription status). Payment
- * links are fine for MVP but give less control. This route coexists with the
- * existing payment link — same Stripe product, better developer surface.
+ * WHY build-time safety: process.env.STRIPE_SECRET_KEY is undefined at build
+ * time in CI (no secrets injected). We guard at request time so next build passes.
  *
  * Accepted body: { plan: "pro" }
- *   - "pro" → $9.90/month recurring subscription
+ *   - "pro" → $7.99/month recurring subscription
  *
  * Env vars required at runtime (not build time):
- *   STRIPE_SECRET_KEY           — Stripe secret key (sk_live_... or sk_test_...)
- *   STRIPE_PRICE_ID_PRO         — Stripe Price ID for the pro monthly plan
- *   NEXT_PUBLIC_APP_URL         — Production URL (https://tattoo.symplyai.io)
+ *   STRIPE_SECRET_KEY       — Stripe secret key (sk_live_... or sk_test_...)
+ *   STRIPE_PRICE_ID_PRO     — Stripe Price ID for the pro monthly plan
+ *   NEXT_PUBLIC_APP_URL     — Production URL (https://tattoo.symplyai.io)
  */
 
 import { NextResponse } from "next/server";
-import type Stripe from "stripe";
-
-/** Lazy singleton — avoids build-time crash when env vars are absent */
-let _stripe: Stripe | null = null;
-function getStripe(): Stripe {
-  if (!_stripe) {
-    if (!process.env.STRIPE_SECRET_KEY) {
-      throw new Error(
-        "STRIPE_SECRET_KEY is not configured. Add it to your Vercel environment."
-      );
-    }
-    // Dynamic require so the module resolves the correct Stripe class at runtime
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const StripeClass = require("stripe") as typeof import("stripe").default;
-    _stripe = new StripeClass(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: "2025-02-24.acacia",
-    });
-  }
-  return _stripe;
-}
-
-/** Map plan name → Stripe Price ID from env. Non-NEXT_PUBLIC_ so key stays server-side. */
-const PRICE_ID_MAP: Record<string, string | undefined> = {
-  pro: process.env.STRIPE_PRICE_ID_PRO,
-};
-
-/** Stripe Checkout mode per plan — pro is a recurring subscription */
-const PLAN_MODE_MAP: Record<string, Stripe.Checkout.SessionCreateParams.Mode> = {
-  pro: "subscription",
-};
 
 export async function POST(request: Request) {
   try {
@@ -68,14 +36,19 @@ export async function POST(request: Request) {
     }
 
     const plan = (body.plan || "pro").toLowerCase().trim();
-    if (!PRICE_ID_MAP[plan] && plan !== "pro") {
+    if (plan !== "pro") {
+      return NextResponse.json({ error: 'plan must be "pro".' }, { status: 400 });
+    }
+
+    const secretKey = process.env.STRIPE_SECRET_KEY;
+    if (!secretKey) {
       return NextResponse.json(
-        { error: 'plan must be "pro".' },
-        { status: 400 }
+        { error: "STRIPE_SECRET_KEY is not configured. Add it to your Vercel environment." },
+        { status: 500 }
       );
     }
 
-    const priceId = PRICE_ID_MAP[plan] || PRICE_ID_MAP["pro"];
+    const priceId = process.env.STRIPE_PRICE_ID_PRO;
     if (!priceId) {
       return NextResponse.json(
         {
@@ -90,24 +63,48 @@ export async function POST(request: Request) {
       process.env.NEXT_PUBLIC_APP_URL || "http://localhost:5982"
     ).replace(/\/$/, "");
 
-    const stripe = getStripe();
-    const session = await stripe.checkout.sessions.create({
-      mode: PLAN_MODE_MAP[plan] || "subscription",
-      line_items: [{ price: priceId, quantity: 1 }],
+    /**
+     * WHY direct fetch to Stripe API instead of the stripe npm SDK:
+     * Stripe SDK exhibits intermittent network failures on Vercel serverless
+     * ("An error occurred with our connection to Stripe. Request was retried 2 times.")
+     * Direct fetch to api.stripe.com with x-www-form-urlencoded works reliably.
+     * The Stripe REST API is stable and well-documented; SDK is a convenience wrapper.
+     * https://stripe.com/docs/api/checkout/sessions/create
+     */
+    const params = new URLSearchParams({
+      mode: "subscription",
+      "line_items[0][price]": priceId,
+      "line_items[0][quantity]": "1",
       success_url: `${appUrl}/success?session_id={CHECKOUT_SESSION_ID}&plan=${plan}`,
       cancel_url: `${appUrl}/pricing`,
       // Allow promo codes so we can run marketing campaigns
-      allow_promotion_codes: true,
-      metadata: { plan, source: "tattoo-generator" },
+      allow_promotion_codes: "true",
+      "metadata[plan]": plan,
+      "metadata[source]": "tattoo-generator",
     });
 
-    return NextResponse.json({ url: session.url });
+    const stripeResponse = await fetch("https://api.stripe.com/v1/checkout/sessions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${secretKey}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Stripe-Version": "2025-02-24.acacia",
+      },
+      body: params.toString(),
+    });
+
+    const stripeData = (await stripeResponse.json()) as { url?: string; error?: { message?: string } };
+
+    if (!stripeResponse.ok || !stripeData.url) {
+      const message = stripeData.error?.message || "Stripe checkout session creation failed.";
+      console.error("[create-checkout] Stripe API error:", stripeResponse.status, message);
+      return NextResponse.json({ error: message }, { status: 502 });
+    }
+
+    return NextResponse.json({ url: stripeData.url });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Checkout failed.";
-    const isConfig =
-      message.includes("STRIPE_SECRET_KEY") ||
-      message.includes("price ID") ||
-      message.includes("not configured");
-    return NextResponse.json({ error: message }, { status: isConfig ? 500 : 502 });
+    console.error("[create-checkout] Unhandled error:", message);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
