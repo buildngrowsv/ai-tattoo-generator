@@ -19,12 +19,35 @@ import type { MetadataRoute } from "next";
 const BASE_URL = "https://ai-tattoo-generator.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const lastModified = new Date();
   return [
     {
       url: BASE_URL,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: "weekly",
       priority: 1.0,
+      alternates: { languages: { en: BASE_URL, es: `${BASE_URL}/es` } },
+    },
+    {
+      url: `${BASE_URL}/pricing`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.9,
+      alternates: {
+        languages: { en: `${BASE_URL}/pricing`, es: `${BASE_URL}/es/pricing` },
+      },
+    },
+    {
+      url: `${BASE_URL}/es`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.95,
+    },
+    {
+      url: `${BASE_URL}/es/pricing`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.85,
     },
   ];
 }

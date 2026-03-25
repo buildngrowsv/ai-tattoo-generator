@@ -306,8 +306,8 @@ export default function TattooGeneratorForm() {
       setHasReachedDailyFreeLimit(true);
       setTodayUsageCount(currentUsageCount);
       setGenerationError({
-        error: "Daily limit reached",
-        message: `You've used all ${DAILY_FREE_GENERATION_LIMIT} free generations today. Upgrade to Pro for unlimited tattoo designs at $9.90/mo.`,
+        error: t("errDailyLimit"),
+        message: t("errDailyLimitMsg", { limit: DAILY_FREE_GENERATION_LIMIT }),
       });
       return;
     }
@@ -362,9 +362,8 @@ export default function TattooGeneratorForm() {
        */
       console.error("Network error during tattoo generation:", networkError);
       setGenerationError({
-        error: "Network error",
-        message:
-          "Could not reach the generation server. Please check your internet connection and try again.",
+        error: t("errNetwork"),
+        message: t("errNetworkMsg"),
       });
     } finally {
       setIsCurrentlyGenerating(false);
@@ -388,12 +387,8 @@ export default function TattooGeneratorForm() {
             <Sparkles className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-foreground">
-              Design Your Tattoo
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Describe your idea and let AI bring it to life
-            </p>
+            <h2 className="text-lg font-semibold text-foreground">{t("cardTitle")}</h2>
+            <p className="text-sm text-muted-foreground">{t("cardSubtitle")}</p>
           </div>
         </div>
 
@@ -412,20 +407,19 @@ export default function TattooGeneratorForm() {
               className="flex items-center gap-2 text-sm font-medium text-foreground mb-2"
             >
               <Paintbrush className="w-4 h-4 text-primary" />
-              Describe Your Tattoo Idea
+              {t("describeLabel")}
             </label>
             <textarea
               id="tattoo-description-input"
               value={tattooDescriptionInput}
               onChange={(e) => setTattooDescriptionInput(e.target.value)}
-              placeholder="A phoenix rising from flames with spread wings, surrounded by cherry blossoms..."
+              placeholder={t("placeholder")}
               rows={4}
               maxLength={1000}
               className="w-full rounded-xl bg-muted border border-border px-4 py-3 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 resize-none transition-all text-sm leading-relaxed"
             />
             <p className="text-xs text-muted-foreground mt-1.5">
-              {tattooDescriptionInput.length}/1000 — Be as descriptive as
-              possible for better results
+              {t("charHint", { count: tattooDescriptionInput.length })}
             </p>
           </div>
 
@@ -443,7 +437,7 @@ export default function TattooGeneratorForm() {
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-3">
               <Paintbrush className="w-4 h-4 text-primary" />
-              Tattoo Style
+              {t("styleLabel")}
             </label>
             <div className="flex flex-wrap gap-2">
               {TATTOO_STYLE_OPTIONS.map((styleOption) => (
@@ -457,7 +451,7 @@ export default function TattooGeneratorForm() {
                       : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground border border-border"
                   }`}
                 >
-                  {styleOption}
+                  {tStyle(styleOption)}
                 </button>
               ))}
             </div>
@@ -480,7 +474,7 @@ export default function TattooGeneratorForm() {
                 className="flex items-center gap-2 text-sm font-medium text-foreground mb-2"
               >
                 <MapPin className="w-4 h-4 text-primary" />
-                Body Placement
+                {t("placementLabel")}
               </label>
               <select
                 id="body-placement-selector"
@@ -490,7 +484,7 @@ export default function TattooGeneratorForm() {
               >
                 {BODY_PLACEMENT_OPTIONS.map((placementOption) => (
                   <option key={placementOption} value={placementOption}>
-                    {placementOption}
+                    {tPlacement(placementOption)}
                   </option>
                 ))}
               </select>
@@ -502,7 +496,7 @@ export default function TattooGeneratorForm() {
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
                 <Maximize2 className="w-4 h-4 text-primary" />
-                Tattoo Size
+                {t("sizeLabel")}
               </label>
               <div className="flex gap-2">
                 {TATTOO_SIZE_OPTIONS.map((sizeOption) => (
@@ -516,7 +510,7 @@ export default function TattooGeneratorForm() {
                         : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground border border-border"
                     }`}
                   >
-                    {sizeOption}
+                    {tSize(sizeOption)}
                   </button>
                 ))}
               </div>
@@ -547,13 +541,13 @@ export default function TattooGeneratorForm() {
               the same pattern used by ChatGPT, Canva, and Midjourney.
               ============================================================ */}
           {hasReachedDailyFreeLimit ? (
-            <a
-              href="#pricing"
+            <Link
+              href="/pricing"
               className="w-full py-4 px-6 rounded-xl text-base font-semibold text-white bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 transition-all duration-200 shadow-lg shadow-amber-600/25 hover:shadow-amber-500/35 flex items-center justify-center gap-2"
             >
               <Crown className="w-5 h-5" />
-              Upgrade to Pro — Unlimited Designs
-            </a>
+              {t("upgradeCta")}
+            </Link>
           ) : (
             <button
               type="button"
@@ -564,12 +558,12 @@ export default function TattooGeneratorForm() {
               {isCurrentlyGenerating ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Generating Your Tattoo Design...
+                  {t("generating")}
                 </>
               ) : (
                 <>
                   <Sparkles className="w-5 h-5" />
-                  Generate Design
+                  {t("generate")}
                 </>
               )}
             </button>
@@ -577,9 +571,11 @@ export default function TattooGeneratorForm() {
 
           {/* Free tier usage counter — always visible so users know their remaining credits */}
           <p className="text-center text-sm text-zinc-400 mt-2">
-            {todayUsageCount} of {DAILY_FREE_GENERATION_LIMIT} free generations used today
+            {t("usageLine", { used: todayUsageCount, limit: DAILY_FREE_GENERATION_LIMIT })}
             {todayUsageCount > 0 && todayUsageCount < DAILY_FREE_GENERATION_LIMIT && (
-              <span className="text-zinc-500"> — {DAILY_FREE_GENERATION_LIMIT - todayUsageCount} remaining</span>
+              <span className="text-zinc-500">
+                {t("usageRemaining", { n: DAILY_FREE_GENERATION_LIMIT - todayUsageCount })}
+              </span>
             )}
           </p>
         </div>
@@ -617,9 +613,7 @@ export default function TattooGeneratorForm() {
       {generationResult && (
         <div className="mt-6 rounded-2xl bg-card border border-border p-5 sm:p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-foreground">
-              Your Tattoo Design
-            </h3>
+            <h3 className="text-lg font-semibold text-foreground">{t("resultTitle")}</h3>
             {/* Download button — opens the image in a new tab for saving.
                 Using target="_blank" because fal.ai CDN images can be
                 saved directly. A more polished version would use a
@@ -631,7 +625,7 @@ export default function TattooGeneratorForm() {
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
             >
               <Download className="w-4 h-4" />
-              Download
+              {t("download")}
             </a>
           </div>
 
@@ -655,7 +649,7 @@ export default function TattooGeneratorForm() {
               how to write better descriptions for future generations. */}
           <details className="mt-4">
             <summary className="text-xs text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
-              View AI prompt used
+              {t("viewPrompt")}
             </summary>
             <p className="text-xs text-muted-foreground/70 mt-2 p-3 rounded-lg bg-muted leading-relaxed">
               {generationResult.prompt}
