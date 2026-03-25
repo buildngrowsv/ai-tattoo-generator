@@ -3,9 +3,16 @@
  *
  * Builder 25 (2026-03-25): Converted to async Server Component so copy lives in
  * `messages/en.json` + `messages/es.json` for T13 EN+ES requirement.
+ *
+ * Builder 9 (2026-03-25 T45): Replaced static buy.stripe.com payment link with
+ * TattooProCheckoutButton client component → POST /api/stripe/create-checkout.
+ * This gives us webhook support, session metadata, and dynamic success/cancel
+ * URLs. The server component passes the CTA label (from translations) to the
+ * client button so i18n still works across EN/ES.
  */
 import { getTranslations } from "next-intl/server";
 import { Check, Zap, Crown } from "lucide-react";
+import { TattooProCheckoutButton } from "@/components/TattooProCheckoutButton";
 
 export default async function PricingSectionWithTiers() {
   const t = await getTranslations("Pricing");
@@ -88,14 +95,14 @@ export default async function PricingSectionWithTiers() {
               ))}
             </ul>
 
-            <a
-              href="https://buy.stripe.com/eVq14ngEhbUYgDN1CVfMA05"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-3 px-6 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 transition-all shadow-md shadow-violet-600/20 hover:shadow-violet-500/30 text-center block"
-            >
-              {t("proCta")}
-            </a>
+            {/*
+              WHY TattooProCheckoutButton instead of the static buy.stripe.com link:
+              The API route approach enables webhook processing (checkout.session.completed),
+              metadata per session, and works correctly across Vercel preview + production
+              without hardcoding a domain. The static link still works as fallback but this
+              is the proper checkout path for tracking conversions server-side.
+            */}
+            <TattooProCheckoutButton label={t("proCta")} />
           </div>
         </div>
       </div>
