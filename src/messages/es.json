@@ -1,0 +1,187 @@
+{
+  "Meta": {
+    "title": "Generador de tatuajes con IA — Diseño gratis | InkAI",
+    "description": "Diseña tu tatuaje ideal con IA. Describe tu idea, elige un estilo y obtén un diseño personalizado en segundos. Prueba gratis — más de 10 estilos: Tradicional, Acuarela, Geométrico, Japonés y más.",
+    "keywordList": [
+      "generador de tatuajes IA",
+      "diseño de tatuajes con inteligencia artificial",
+      "creador de tatuajes IA",
+      "diseño personalizado de tatuajes",
+      "ideas de tatuajes IA",
+      "arte de tatuaje con IA",
+      "generador de flash tattoo",
+      "herramienta diseño tatuajes",
+      "diseñador de tatuajes gratis",
+      "generador estilos tatuaje"
+    ],
+    "ogTitle": "Generador de tatuajes con IA — Arte personalizado al instante",
+    "ogDescription": "Describe el tatuaje de tus sueños y véalo cobrar vida con IA. Más de 10 estilos. Prueba gratis, resultados al instante.",
+    "siteName": "InkAI — Generador de tatuajes con IA",
+    "twitterTitle": "Generador de tatuajes con IA | InkAI",
+    "twitterDescription": "Diseña tatuajes personalizados con IA. Más de 10 estilos. Prueba gratis."
+  },
+  "Header": {
+    "goPro": "Hazte Pro",
+    "localeEn": "EN",
+    "localeEs": "ES"
+  },
+  "Footer": {
+    "privacy": "Política de privacidad",
+    "terms": "Términos del servicio",
+    "refund": "Política de reembolsos",
+    "contact": "Contacto",
+    "copyright": "© {year} InkAI. Todos los derechos reservados."
+  },
+  "Home": {
+    "trustBadge": "Diseño de tatuajes con IA",
+    "heroTitleBefore": "Generador de tatuajes",
+    "heroTitleAccent": "con IA",
+    "heroSubtitle": "Describe el tatuaje de tus sueños y míralo cobrar vida con IA. Elige entre 10 estilos, la zona del cuerpo y obtén un diseño personalizado en segundos. Prueba gratis.",
+    "whyTitleBefore": "¿Por qué usar",
+    "whyTitleAccent": "InkAI",
+    "whySubtitle": "La forma más rápida de visualizar tus ideas antes de ir al estudio.",
+    "featureAiTitle": "Diseño con IA",
+    "featureAiBody": "Modelos avanzados crean arte de tatuaje único y de calidad profesional a partir de tus descripciones.",
+    "featureStylesTitle": "Más de 10 estilos",
+    "featureStylesBody": "Tradicional, Acuarela, Japonés, Geométrico, Minimalista y más. Cada estilo ofrece resultados auténticos.",
+    "featureInstantTitle": "Vista previa al instante",
+    "featureInstantBody": "Ve tu diseño en segundos, no en días. Itera rápido antes de un tatuaje permanente.",
+    "statDesigns": "Diseños creados",
+    "statTime": "Tiempo de generación",
+    "statStyles": "Estilos de tatuaje",
+    "statPrivate": "Privado y seguro",
+    "statDesignsValue": "50K+",
+    "statTimeValue": "~10s",
+    "statStylesValue": "10+",
+    "statPrivateValue": "100%"
+  },
+  "Pricing": {
+    "sectionTitleBefore": "Precios",
+    "sectionTitleAccent": "transparentes",
+    "sectionSubtitle": "Empieza gratis. Mejora cuando necesites diseños ilimitados.",
+    "freeTitle": "Gratis",
+    "freeSubtitle": "Pruébalo",
+    "freePer": "/mes",
+    "freeCta": "Plan actual",
+    "proBadge": "MÁS POPULAR",
+    "proTitle": "Pro",
+    "proSubtitle": "Para artistas y entusiastas",
+    "proPer": "/mes",
+    "proCta": "Pasarte a Pro — 9,90 $/mes",
+    "freeFeatures": [
+      "3 diseños al día",
+      "10 estilos de tatuaje",
+      "Todas las zonas del cuerpo",
+      "Resolución estándar",
+      "Descarga en PNG"
+    ],
+    "proFeatures": [
+      "Diseños ilimitados",
+      "10 estilos de tatuaje",
+      "Todas las zonas del cuerpo",
+      "Salida en alta resolución",
+      "Descarga en PNG",
+      "Generación prioritaria",
+      "Licencia de uso comercial",
+      "Acceso anticipado a nuevos estilos"
+    ]
+  },
+  "Faq": {
+    "headingBefore": "Preguntas",
+    "headingAccent": "frecuentes",
+    "subtitle": "Todo lo que debes saber sobre el diseño de tatuajes con IA.",
+    "items": [
+      {
+        "q": "¿Qué es un generador de tatuajes con IA?",
+        "a": "Un generador de tatuajes con IA crea diseños personalizados a partir de tu descripción. Describes tu idea, eliges un estilo (Tradicional, Acuarela, Japonés, etc.) y la IA genera un diseño único y de calidad profesional en segundos."
+      },
+      {
+        "q": "¿Cómo funciona el proceso?",
+        "a": "Es sencillo: 1) Describe tu idea en lenguaje natural. 2) Elige un estilo entre 10 opciones. 3) Elige zona del cuerpo y tamaño. 4) Pulsa «Generar diseño» y recibe tu arte en unos 10-15 segundos."
+      },
+      {
+        "q": "¿Es gratis?",
+        "a": "¡Sí! Puedes generar hasta 3 diseños gratis al día sin registrarte. Para diseños ilimitados, prioridad, alta resolución y uso comercial, pásate a Pro por 9,90 $/mes."
+      },
+      {
+        "q": "¿Puedo llevar el diseño a un tatuador real?",
+        "a": "Por supuesto. Muchos usuarios usan los diseños como referencia para su tatuador. Son un punto de partida detallado que el artista puede adaptar a tu cuerpo."
+      },
+      {
+        "q": "¿Qué estilos hay disponibles?",
+        "a": "Diez estilos populares: Tradicional americano, Acuarela, Geométrico, Japonés (irezumi), Minimalista, Blackwork, Tribal, Realismo, Neo-tradicional y Dotwork."
+      },
+      {
+        "q": "¿Qué calidad tienen los diseños?",
+        "a": "La IA produce diseños de calidad profesional como material de referencia. La calidad depende de tu descripción: cuanto más detalle, mejor el resultado. Usamos modelos avanzados (FLUX) orientados al arte."
+      },
+      {
+        "q": "¿Son privados mis diseños?",
+        "a": "Sí. Tus descripciones y diseños se procesan de forma segura; no se guardan de forma permanente ni se comparten con otros usuarios. Las imágenes están en CDN temporal para descarga."
+      },
+      {
+        "q": "¿Puedo usar los diseños comercialmente?",
+        "a": "En el plan gratuito el uso es personal. Los suscriptores Pro obtienen licencia comercial para portfolios de estudio, merchandising, impresiones y más."
+      }
+    ]
+  },
+  "Form": {
+    "cardTitle": "Diseña tu tatuaje",
+    "cardSubtitle": "Describe tu idea y deja que la IA la haga realidad",
+    "describeLabel": "Describe tu idea de tatuaje",
+    "placeholder": "Un fénix surgiendo de las llamas con las alas abiertas, rodeado de cerezos en flor...",
+    "charHint": "{count}/1000 — Sé lo más descriptivo posible para mejores resultados",
+    "styleLabel": "Estilo de tatuaje",
+    "placementLabel": "Zona del cuerpo",
+    "sizeLabel": "Tamaño del tatuaje",
+    "upgradeCta": "Pasarte a Pro — diseños ilimitados",
+    "generating": "Generando tu diseño...",
+    "generate": "Generar diseño",
+    "usageLine": "{used} de {limit} generaciones gratis hoy",
+    "usageRemaining": " — {n} restantes",
+    "resultTitle": "Tu diseño de tatuaje",
+    "download": "Descargar",
+    "viewPrompt": "Ver prompt usado por la IA",
+    "errMissingDescription": "Falta la descripción",
+    "errMissingDescriptionMsg": "Describe tu idea de tatuaje antes de generar.",
+    "errDailyLimit": "Límite diario alcanzado",
+    "errDailyLimitMsg": "Has usado las {limit} generaciones gratis de hoy. Pásate a Pro para diseños ilimitados por 9,90 $/mes.",
+    "errNetwork": "Error de red",
+    "errNetworkMsg": "No se pudo contactar con el servidor. Comprueba tu conexión e inténtalo de nuevo.",
+    "Styles": {
+      "Traditional": "Tradicional",
+      "Watercolor": "Acuarela",
+      "Geometric": "Geométrico",
+      "Japanese": "Japonés",
+      "Minimalist": "Minimalista",
+      "Blackwork": "Blackwork",
+      "Tribal": "Tribal",
+      "Realism": "Realismo",
+      "Neo-Traditional": "Neo-tradicional",
+      "Dotwork": "Dotwork"
+    },
+    "Placements": {
+      "Arm": "Brazo",
+      "Forearm": "Antebrazo",
+      "Back": "Espalda",
+      "Chest": "Pecho",
+      "Leg": "Pierna",
+      "Ankle": "Tobillo",
+      "Shoulder": "Hombro",
+      "Neck": "Cuello",
+      "Wrist": "Muñeca",
+      "Ribs": "Costillas"
+    },
+    "Sizes": {
+      "Small": "Pequeño",
+      "Medium": "Mediano",
+      "Large": "Grande"
+    }
+  },
+  "PricingPage": {
+    "metaTitle": "Precios | InkAI — Generador de tatuajes con IA",
+    "metaDescription": "Compara planes Gratis y Pro de InkAI. Empieza con 3 diseños gratis al día o mejora para generaciones ilimitadas.",
+    "heroTitle": "Precios de InkAI",
+    "heroSubtitle": "Empieza gratis; mejora cuando necesites generaciones ilimitadas y derechos comerciales."
+  }
+}

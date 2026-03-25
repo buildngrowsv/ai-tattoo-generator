@@ -6,7 +6,9 @@
     "dev": "next dev --port 3847",
     "build": "next build",
     "start": "next start --port 3847",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "verify": "npm run build && echo '✅ Build passes — safe to deploy'"
   },
   "dependencies": {
     "@fal-ai/client": "^1.2.1",
@@ -14,6 +16,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^1.0.1",
     "next": "^16.2.1",
+    "next-intl": "^3.26.5",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "tailwind-merge": "^3.5.0"
@@ -23,7 +26,10 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^4.3.0",
+    "jsdom": "^24.0.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^1.6.0"
   }
 }

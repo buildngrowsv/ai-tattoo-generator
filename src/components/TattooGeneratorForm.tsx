@@ -44,7 +44,9 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import {
   Sparkles,
   Loader2,
@@ -209,6 +211,11 @@ function incrementTodayGenerationCount(): void {
 }
 
 export default function TattooGeneratorForm() {
+  const t = useTranslations("Form");
+  const tStyle = useTranslations("Form.Styles");
+  const tPlacement = useTranslations("Form.Placements");
+  const tSize = useTranslations("Form.Sizes");
+
   /**
    * Form state — controlled inputs for all form fields.
    * Default selections are chosen to be the most common/popular options
@@ -246,14 +253,15 @@ export default function TattooGeneratorForm() {
   /**
    * Initialize usage count from localStorage on mount.
    * Must be in useEffect because localStorage is not available during SSR.
+   *
+   * NOTE (Builder 25, 2026-03-25): Previous code incorrectly used useState with a
+   * side-effect callback; that pattern never runs. useEffect is the correct hook.
    */
-  useState(() => {
-    if (typeof window !== "undefined") {
-      const count = getTodayGenerationCount();
-      setTodayUsageCount(count);
-      setHasReachedDailyFreeLimit(count >= DAILY_FREE_GENERATION_LIMIT);
-    }
-  });
+  useEffect(() => {
+    const count = getTodayGenerationCount();
+    setTodayUsageCount(count);
+    setHasReachedDailyFreeLimit(count >= DAILY_FREE_GENERATION_LIMIT);
+  }, []);
 
   /**
    * handleGenerateTattooDesign — Submits the form to /api/generate.
@@ -276,8 +284,8 @@ export default function TattooGeneratorForm() {
      */
     if (!tattooDescriptionInput.trim()) {
       setGenerationError({
-        error: "Missing description",
-        message: "Please describe your tattoo idea before generating.",
+        error: t("errMissingDescription"),
+        message: t("errMissingDescriptionMsg"),
       });
       return;
     }

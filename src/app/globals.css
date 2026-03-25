@@ -59,10 +59,17 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+    /* Mobile overflow fix — Agent 21 (2026-03-24)
+       Prevents horizontal scroll from absolute-positioned gradient orbs
+       and wide elements at narrow viewports. #1 mobile UX issue across AI tool sites. */
+    overflow-x: hidden;
+    max-width: 100%;
   }
 
   html {
     @apply scroll-smooth;
+    /* Mobile overflow fix — Agent 21 (2026-03-24) */
+    overflow-x: hidden;
   }
 }
 

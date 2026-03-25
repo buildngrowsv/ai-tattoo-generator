@@ -1,0 +1,187 @@
+{
+  "Meta": {
+    "title": "AI Tattoo Design Generator - Free AI Tattoo Maker | InkAI",
+    "description": "Design your perfect tattoo with AI. Describe your idea, choose a style, and get a custom tattoo design in seconds. Free to try — 10+ styles including Traditional, Watercolor, Geometric, Japanese, and more.",
+    "keywordList": [
+      "AI tattoo generator",
+      "tattoo design AI",
+      "AI tattoo maker",
+      "custom tattoo design",
+      "tattoo idea generator",
+      "AI tattoo art",
+      "tattoo flash generator",
+      "tattoo design tool",
+      "free tattoo designer",
+      "tattoo style generator"
+    ],
+    "ogTitle": "AI Tattoo Design Generator - Create Custom Tattoo Art with AI",
+    "ogDescription": "Describe your dream tattoo and see it come to life with AI. Choose from 10+ styles. Free to try, instant results.",
+    "siteName": "InkAI - AI Tattoo Design Generator",
+    "twitterTitle": "AI Tattoo Design Generator | InkAI",
+    "twitterDescription": "Design custom tattoos with AI. 10+ styles, instant results. Try free."
+  },
+  "Header": {
+    "goPro": "Go Pro",
+    "localeEn": "EN",
+    "localeEs": "ES"
+  },
+  "Footer": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "refund": "Refund Policy",
+    "contact": "Contact",
+    "copyright": "© {year} InkAI. All rights reserved."
+  },
+  "Home": {
+    "trustBadge": "AI-Powered Tattoo Design",
+    "heroTitleBefore": "AI Tattoo Design",
+    "heroTitleAccent": "Generator",
+    "heroSubtitle": "Describe your dream tattoo and see it come to life with AI. Choose from 10 styles, pick your placement, and get a custom design in seconds. Free to try.",
+    "whyTitleBefore": "Why Use",
+    "whyTitleAccent": "InkAI",
+    "whySubtitle": "The fastest way to visualize your tattoo ideas before going to the studio.",
+    "featureAiTitle": "AI-Powered Design",
+    "featureAiBody": "Advanced AI models create unique, professional-quality tattoo artwork from your text descriptions. Every design is one-of-a-kind.",
+    "featureStylesTitle": "10+ Tattoo Styles",
+    "featureStylesBody": "Traditional, Watercolor, Japanese, Geometric, Minimalist, and more. Each style produces authentic, style-specific results.",
+    "featureInstantTitle": "Instant Preview",
+    "featureInstantBody": "See your tattoo design in seconds, not days. Iterate quickly on ideas before committing to a permanent piece of art.",
+    "statDesigns": "Designs Created",
+    "statTime": "Generation Time",
+    "statStyles": "Tattoo Styles",
+    "statPrivate": "Private & Secure",
+    "statDesignsValue": "50K+",
+    "statTimeValue": "~10s",
+    "statStylesValue": "10+",
+    "statPrivateValue": "100%"
+  },
+  "Pricing": {
+    "sectionTitleBefore": "Simple,",
+    "sectionTitleAccent": "Transparent Pricing",
+    "sectionSubtitle": "Start free. Upgrade when you need unlimited designs.",
+    "freeTitle": "Free",
+    "freeSubtitle": "Try it out",
+    "freePer": "/month",
+    "freeCta": "Current Plan",
+    "proBadge": "MOST POPULAR",
+    "proTitle": "Pro",
+    "proSubtitle": "For artists & enthusiasts",
+    "proPer": "/month",
+    "proCta": "Upgrade to Pro — $9.90/mo",
+    "freeFeatures": [
+      "3 designs per day",
+      "10 tattoo styles",
+      "All body placements",
+      "Standard resolution",
+      "Download as PNG"
+    ],
+    "proFeatures": [
+      "Unlimited designs",
+      "10 tattoo styles",
+      "All body placements",
+      "High resolution output",
+      "Download as PNG",
+      "Priority generation speed",
+      "Commercial use license",
+      "Early access to new styles"
+    ]
+  },
+  "Faq": {
+    "headingBefore": "Frequently Asked",
+    "headingAccent": "Questions",
+    "subtitle": "Everything you need to know about AI tattoo design generation.",
+    "items": [
+      {
+        "q": "What is an AI tattoo generator?",
+        "a": "An AI tattoo generator uses artificial intelligence to create custom tattoo designs based on your text description. You describe your tattoo idea — like 'a wolf howling at the moon with pine trees' — choose a style (Traditional, Watercolor, Japanese, etc.), and the AI creates a unique, professional-quality tattoo design in seconds."
+      },
+      {
+        "q": "How does the AI tattoo design process work?",
+        "a": "It's simple: 1) Describe your tattoo idea in plain English. 2) Select your preferred tattoo style from 10 options. 3) Choose body placement and size. 4) Click 'Generate Design' and get your custom tattoo artwork in about 10-15 seconds."
+      },
+      {
+        "q": "Is the AI tattoo generator free to use?",
+        "a": "Yes! You can generate up to 3 free tattoo designs per day with no signup required. For unlimited designs, priority generation speed, high-resolution output, and commercial use rights, upgrade to Pro for $9.90/month."
+      },
+      {
+        "q": "Can I take AI-generated designs to a real tattoo artist?",
+        "a": "Absolutely! Many of our users use AI-generated designs as reference material for their tattoo artists. The designs serve as a detailed starting point that your artist can refine, resize, and adapt to your body."
+      },
+      {
+        "q": "What tattoo styles are available?",
+        "a": "We support 10 popular tattoo styles: Traditional (American classic), Watercolor (painterly effects), Geometric (mathematical patterns), Japanese (irezumi), Minimalist (fine line), Blackwork (solid black), Tribal (Polynesian-inspired), Realism (photorealistic), Neo-Traditional (modern classic), and Dotwork (stipple shading)."
+      },
+      {
+        "q": "How good is the quality of AI-generated tattoo designs?",
+        "a": "The AI produces professional-quality tattoo designs suitable for use as reference material. The output quality depends on your description — more detailed descriptions produce better results. We use advanced AI models (FLUX) specifically tuned for artistic output."
+      },
+      {
+        "q": "Are my tattoo designs private?",
+        "a": "Yes. Your descriptions and generated designs are processed securely and are not stored permanently or shared with other users. Generated images are hosted on a temporary CDN for you to download."
+      },
+      {
+        "q": "Can I use generated designs commercially?",
+        "a": "Free tier designs are for personal use only. Pro subscribers ($9.90/month) receive a commercial use license that allows you to use generated designs for tattoo studio portfolios, merchandise, prints, and other commercial purposes."
+      }
+    ]
+  },
+  "Form": {
+    "cardTitle": "Design Your Tattoo",
+    "cardSubtitle": "Describe your idea and let AI bring it to life",
+    "describeLabel": "Describe Your Tattoo Idea",
+    "placeholder": "A phoenix rising from flames with spread wings, surrounded by cherry blossoms...",
+    "charHint": "{count}/1000 — Be as descriptive as possible for better results",
+    "styleLabel": "Tattoo Style",
+    "placementLabel": "Body Placement",
+    "sizeLabel": "Tattoo Size",
+    "upgradeCta": "Upgrade to Pro — Unlimited Designs",
+    "generating": "Generating Your Tattoo Design...",
+    "generate": "Generate Design",
+    "usageLine": "{used} of {limit} free generations used today",
+    "usageRemaining": " — {n} remaining",
+    "resultTitle": "Your Tattoo Design",
+    "download": "Download",
+    "viewPrompt": "View AI prompt used",
+    "errMissingDescription": "Missing description",
+    "errMissingDescriptionMsg": "Please describe your tattoo idea before generating.",
+    "errDailyLimit": "Daily limit reached",
+    "errDailyLimitMsg": "You've used all {limit} free generations today. Upgrade to Pro for unlimited tattoo designs at $9.90/mo.",
+    "errNetwork": "Network error",
+    "errNetworkMsg": "Could not reach the generation server. Please check your internet connection and try again.",
+    "Styles": {
+      "Traditional": "Traditional",
+      "Watercolor": "Watercolor",
+      "Geometric": "Geometric",
+      "Japanese": "Japanese",
+      "Minimalist": "Minimalist",
+      "Blackwork": "Blackwork",
+      "Tribal": "Tribal",
+      "Realism": "Realism",
+      "Neo-Traditional": "Neo-Traditional",
+      "Dotwork": "Dotwork"
+    },
+    "Placements": {
+      "Arm": "Arm",
+      "Forearm": "Forearm",
+      "Back": "Back",
+      "Chest": "Chest",
+      "Leg": "Leg",
+      "Ankle": "Ankle",
+      "Shoulder": "Shoulder",
+      "Neck": "Neck",
+      "Wrist": "Wrist",
+      "Ribs": "Ribs"
+    },
+    "Sizes": {
+      "Small": "Small",
+      "Medium": "Medium",
+      "Large": "Large"
+    }
+  },
+  "PricingPage": {
+    "metaTitle": "Pricing | InkAI — AI Tattoo Design Generator",
+    "metaDescription": "Compare Free and Pro plans for InkAI. Start with 3 free designs per day or upgrade for unlimited AI tattoo generations.",
+    "heroTitle": "InkAI Pricing",
+    "heroSubtitle": "Start free, upgrade when you need unlimited generations and commercial rights."
+  }
+}

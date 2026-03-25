@@ -15,6 +15,13 @@
  * 4. This is the standard stack across all our saas-clone-template projects
  */
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+/**
+ * next-intl plugin wires `src/i18n/request.ts` into the Next.js build so
+ * `getMessages` / `getTranslations` resolve per request (Builder 25, T13).
+ */
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   /**
@@ -40,4 +47,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);
