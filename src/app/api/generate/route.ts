@@ -33,6 +33,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { checkIpRateLimit } from "@/lib/server-ip-rate-limiter";
 
 /* ------------------------------------------------------------------ */
 /*  Simple in-memory IP-based rate limiter                             */
@@ -191,6 +192,26 @@ function constructTattooPromptFromUserInputs(
  * CALLED BY: Client-side fetch in TattooGeneratorForm.tsx
  */
 export async function POST(request: NextRequest) {
+  // ---------------------------------------------------------------------------
+  // P0 HARDENING (2026-03-25): Server-side IP rate limit — MUST run before fal.ai call.
+  // Without this, anyone with the endpoint URL can bypass the client-side localStorage
+  // gate (DevTools, curl) and burn our FAL_KEY budget with unlimited free generations.
+  // See: src/lib/server-ip-rate-limiter.ts for implementation details.
+  // ---------------------------------------------------------------------------
+  const _clientIp =
+    (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "unknown";
+  if (!checkIpRateLimit(_clientIp)) {
+    return NextResponse.json(
+      {
+        error:
+          "You have used your 5 free generations for today. Upgrade to Pro for unlimited access.",
+        upgradeUrl: "/pricing",
+      },
+      { status: 429 }
+    );
+  }
+
+
   try {
     /**
      * Server-side IP rate limit — 5 requests per 60s per IP.
