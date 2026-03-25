@@ -79,15 +79,16 @@ export async function POST(request: Request) {
      * Stripe recognizes and substitutes the session ID. We build the body manually
      * and explicitly keep the Stripe template variable un-encoded.
      */
-    const successUrl = `${appUrl}/success?session_id={CHECKOUT_SESSION_ID}&plan=${plan}`;
+    // Simple success/cancel URLs — no {CHECKOUT_SESSION_ID} template needed for MVP
+    // (we don't have a DB to look up sessions by ID; Stripe confirmation email handles receipt)
+    const successUrl = `${appUrl}/success?plan=${encodeURIComponent(plan)}`;
     const cancelUrl = `${appUrl}/pricing`;
 
-    // Build form-encoded body manually to preserve Stripe's {CHECKOUT_SESSION_ID} template
+    // Build form-encoded body with encodeURIComponent on each value
     const bodyParts = [
       `mode=subscription`,
       `line_items[0][price]=${encodeURIComponent(priceId)}`,
       `line_items[0][quantity]=1`,
-      // Keep {CHECKOUT_SESSION_ID} literal — Stripe substitutes it after payment
       `success_url=${encodeURIComponent(successUrl)}`,
       `cancel_url=${encodeURIComponent(cancelUrl)}`,
       `allow_promotion_codes=true`,
