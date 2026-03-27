@@ -33,7 +33,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { checkIpRateLimit } from "@/lib/server-ip-rate-limiter";
+import { checkIpRateLimit, extractClientIpAddress } from "@/lib/server-ip-rate-limiter";
 
 /**
  * TattooGenerationRequestBody — The shape of the POST request body.
@@ -171,9 +171,9 @@ export async function POST(request: NextRequest) {
   // gate (DevTools, curl) and burn our FAL_KEY budget with unlimited free generations.
   // See: src/lib/server-ip-rate-limiter.ts for implementation details.
   // ---------------------------------------------------------------------------
-  const _clientIp =
-    (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "unknown";
-  if (!checkIpRateLimit(_clientIp)) {
+  const _clientIp = extractClientIpAddress(request);
+  const rateLimitCheckResult = await checkIpRateLimit(_clientIp);
+  if (!rateLimitCheckResult.allowed) {
     return NextResponse.json(
       {
         error:
