@@ -33,6 +33,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { createPendingToken } from "@/lib/subscription-store";
 
 export async function POST(request: NextRequest) {
   /**
@@ -87,6 +88,11 @@ export async function POST(request: NextRequest) {
     .replace(/\/$/, "")
     .trim();
 
+  // T018 Pro token (2026-03-26): generate before the Stripe call so it can be
+  // passed as client_reference_id (for webhook activation) and embedded in
+  // success_url (for localStorage capture by the client).
+  const subscriptionToken = await createPendingToken();
+
   /* Call Stripe REST API with native fetch — avoids SDK serverless issues */
   try {
     const formBody = [
@@ -94,8 +100,11 @@ export async function POST(request: NextRequest) {
       `line_items[0][price]=${encodeURIComponent(priceId)}`,
       `line_items[0][quantity]=1`,
       `allow_promotion_codes=true`,
-      `success_url=${encodeURIComponent(`${appBaseUrl}/?checkout=success`)}`,
+      `success_url=${encodeURIComponent(`${appBaseUrl}/?checkout=success&token=${subscriptionToken}`)}`,
       `cancel_url=${encodeURIComponent(`${appBaseUrl}/?checkout=cancelled`)}`,
+      // client_reference_id is echoed back in checkout.session.completed so the
+      // webhook can activate the token without a user database.
+      `client_reference_id=${encodeURIComponent(subscriptionToken)}`,
     ].join("&");
 
     const stripeResponse = await fetch(

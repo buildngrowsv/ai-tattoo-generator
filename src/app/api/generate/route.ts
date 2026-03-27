@@ -34,6 +34,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { checkIpRateLimit, extractClientIpAddress } from "@/lib/server-ip-rate-limiter";
+import { isProActive } from "@/lib/subscription-store";
 
 /**
  * TattooGenerationRequestBody — The shape of the POST request body.
@@ -166,22 +167,50 @@ function constructTattooPromptFromUserInputs(
  */
 export async function POST(request: NextRequest) {
   // ---------------------------------------------------------------------------
-  // P0 HARDENING (2026-03-25): Server-side IP rate limit — MUST run before fal.ai call.
-  // Without this, anyone with the endpoint URL can bypass the client-side localStorage
-  // gate (DevTools, curl) and burn our FAL_KEY budget with unlimited free generations.
+  // PRO ENTITLEMENT CHECK (T018, 2026-03-26): Check x-pro-token BEFORE IP rate limit.
+  //
+  // WHY BEFORE IP RATE LIMIT:
+  // Pro subscribers have paid for unlimited access. Checking their token first means
+  // they never hit the free-tier 429 gate and their IP is never counted against the
+  // rate-limit window. The IP rate limit is only for anonymous/free-tier users.
+  //
+  // HOW IT WORKS:
+  // 1. Client stores UUID token in localStorage after successful Stripe checkout
+  //    (token was included in success_url ?token= param by the checkout routes)
+  // 2. Client sends token in x-pro-token header on every generate request
+  // 3. isProActive() looks up the token in Upstash Redis
+  // 4. If "active" → skip IP rate limit, proceed to fal.ai
+  // 5. If null/pending/absent → fall through to IP rate limit (free-tier path)
+  //
+  // GRACEFUL DEGRADATION:
+  // If Upstash is not configured, isProActive() returns false for all tokens.
+  // Free-tier users are unaffected. Pro users are temporarily downgraded to free
+  // tier until UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN are set on Vercel.
+  //
+  // See: src/lib/subscription-store.ts for the full token lifecycle docs.
+  // ---------------------------------------------------------------------------
+  const proToken = request.headers.get("x-pro-token");
+  const isUserProSubscriber = await isProActive(proToken);
+
+  // ---------------------------------------------------------------------------
+  // P0 HARDENING (2026-03-25): Server-side IP rate limit — only for free-tier users.
+  // Pro subscribers bypass this gate entirely via the token check above.
+  // Without this gate, anyone with the endpoint URL can burn our FAL_KEY budget.
   // See: src/lib/server-ip-rate-limiter.ts for implementation details.
   // ---------------------------------------------------------------------------
   const _clientIp = extractClientIpAddress(request);
-  const rateLimitCheckResult = await checkIpRateLimit(_clientIp);
-  if (!rateLimitCheckResult.allowed) {
-    return NextResponse.json(
-      {
-        error:
-          "You have used your 5 free generations for today. Upgrade to Pro for unlimited access.",
-        upgradeUrl: "/pricing",
-      },
-      { status: 429 }
-    );
+  if (!isUserProSubscriber) {
+    const rateLimitCheckResult = await checkIpRateLimit(_clientIp);
+    if (!rateLimitCheckResult.allowed) {
+      return NextResponse.json(
+        {
+          error:
+            "You have used your 5 free generations for today. Upgrade to Pro for unlimited access.",
+          upgradeUrl: "/pricing",
+        },
+        { status: 429 }
+      );
+    }
   }
   try {
     /**

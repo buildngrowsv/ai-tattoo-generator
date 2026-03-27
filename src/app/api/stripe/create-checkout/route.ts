@@ -25,6 +25,7 @@
  */
 
 import { NextResponse } from "next/server";
+import { createPendingToken } from "@/lib/subscription-store";
 
 export async function POST(request: Request) {
   try {
@@ -79,9 +80,19 @@ export async function POST(request: Request) {
      * Stripe recognizes and substitutes the session ID. We build the body manually
      * and explicitly keep the Stripe template variable un-encoded.
      */
+    // ---------------------------------------------------------------------------
+    // T018 Pro token (2026-03-26): generate a UUID before the Stripe call so we
+    // can pass it as client_reference_id (for webhook activation) and embed it
+    // in the success URL so the client can store it in localStorage.
+    // If Redis is unavailable, createPendingToken() still returns a UUID (fail-open).
+    // See: src/lib/subscription-store.ts for full token lifecycle docs.
+    // ---------------------------------------------------------------------------
+    const subscriptionToken = await createPendingToken();
+
     // Redirect back to a real page in this app. The repo does not have a dedicated
     // /success route, so sending users there would create a post-payment 404.
-    const successUrl = `${appUrl}/?checkout=success&plan=${encodeURIComponent(plan)}`;
+    // Token appended so the client can capture it in localStorage after Stripe redirects.
+    const successUrl = `${appUrl}/?checkout=success&token=${encodeURIComponent(subscriptionToken)}`;
     const cancelUrl = `${appUrl}/pricing`;
 
     // Build form-encoded body with encodeURIComponent on each value
@@ -92,6 +103,9 @@ export async function POST(request: Request) {
       `success_url=${encodeURIComponent(successUrl)}`,
       `cancel_url=${encodeURIComponent(cancelUrl)}`,
       `allow_promotion_codes=true`,
+      // client_reference_id is echoed back by Stripe in checkout.session.completed
+      // so the webhook can activate the token without a user database.
+      `client_reference_id=${encodeURIComponent(subscriptionToken)}`,
       `metadata[plan]=${encodeURIComponent(plan)}`,
       `metadata[source]=tattoo-generator`,
     ];

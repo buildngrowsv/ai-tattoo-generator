@@ -30,6 +30,7 @@
 
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { activateToken } from "@/lib/subscription-store";
 
 /** Required so Next.js reads the raw request body (not a pre-parsed stream) */
 export const dynamic = "force-dynamic";
@@ -98,46 +99,57 @@ export async function POST(request: Request) {
     );
   }
 
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
-    const plan = session.metadata?.plan;
-    const customerId =
-      typeof session.customer === "string" ? session.customer : null;
-    const amountTotal = session.amount_total;
-    const customerEmail = session.customer_details?.email ?? null;
+  // ---------------------------------------------------------------------------
+  // T018 EVENT HANDLERS (2026-03-26): replaced fail-closed 503 stubs with real
+  // Upstash Redis token activation. All events return 200 so Stripe stops retrying.
+  // See: src/lib/subscription-store.ts for token lifecycle details.
+  // ---------------------------------------------------------------------------
 
-    console.error(
-      `[webhook] checkout.session.completed received without entitlement backend — plan=${plan} customer=${customerId} email=${customerEmail} amount=${amountTotal}`
-    );
-    return NextResponse.json(
-      {
-        error:
-          "Checkout completed but no entitlement backend is configured. " +
-          "Provision a database-backed subscription flow before acknowledging this event.",
-      },
-      { status: 503 }
-    );
+  switch (event.type) {
+    case "checkout.session.completed": {
+      // client_reference_id was set by create-checkout and checkout routes at
+      // session creation time. It is the UUID stored in Redis as "pending".
+      // activateToken() upgrades it to "active" (13-month TTL).
+      const checkoutSession = event.data.object as Stripe.Checkout.Session;
+      const subscriptionToken = checkoutSession.client_reference_id;
+      if (subscriptionToken) {
+        await activateToken(subscriptionToken);
+        console.log(
+          `[webhook] checkout.session.completed — activated token`,
+          { sessionId: checkoutSession.id, tokenFragment: subscriptionToken.slice(0, 8) }
+        );
+      } else {
+        console.warn(
+          "[webhook] checkout.session.completed — no client_reference_id; token not activated",
+          { sessionId: checkoutSession.id }
+        );
+      }
+      break;
+    }
+
+    case "customer.subscription.updated":
+      // Log for observability; no token action needed for plan updates in MVP.
+      console.log("[webhook] customer.subscription.updated — logged, no token action");
+      break;
+
+    case "customer.subscription.deleted":
+      // No client_reference_id on this event type — token cancellation via
+      // cancelToken() requires a lookup we don't have yet. Log and 200 for now.
+      console.log("[webhook] customer.subscription.deleted — logged, no token action");
+      break;
+
+    case "invoice.paid":
+      console.log("[webhook] invoice.paid — logged");
+      break;
+
+    case "invoice.payment_failed":
+      console.log("[webhook] invoice.payment_failed — logged");
+      break;
+
+    default:
+      // All other events acknowledged with 200 to avoid Stripe retry loops.
+      console.log(`[webhook] Unhandled event type: ${event.type}`);
   }
 
-  if (
-    event.type === "customer.subscription.created" ||
-    event.type === "customer.subscription.updated" ||
-    event.type === "customer.subscription.deleted" ||
-    event.type === "invoice.paid" ||
-    event.type === "invoice.payment_failed"
-  ) {
-    console.error(
-      `[webhook] ${event.type} received without entitlement backend — failing closed`
-    );
-    return NextResponse.json(
-      {
-        error:
-          "Subscription lifecycle event received but no entitlement backend is configured.",
-      },
-      { status: 503 }
-    );
-  }
-
-  // Non-entitlement events can be acknowledged safely.
   return NextResponse.json({ received: true }, { status: 200 });
 }
