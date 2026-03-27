@@ -251,16 +251,61 @@ export default function TattooGeneratorForm() {
   const [hasReachedDailyFreeLimit, setHasReachedDailyFreeLimit] = useState(false);
 
   /**
+   * T018 Pro token state (Builder 7, 2026-03-27).
+   *
+   * WHY THIS STATE EXISTS:
+   * After a successful Stripe checkout, the server embeds a UUID token in the
+   * success URL as `?token=<uuid>`. The frontend captures that token, stores it
+   * in localStorage, and includes it on every /api/generate request via the
+   * `x-pro-token` header. The generate route checks Upstash Redis — if the token
+   * is "active" the IP rate limit is bypassed and the user gets unlimited access.
+   *
+   * WHY useState (not reading localStorage in every render):
+   * localStorage is not available during SSR. We read it once in useEffect after
+   * mount and store in state. This avoids hydration mismatches.
+   */
+  const [activeProToken, setActiveProToken] = useState<string | null>(null);
+
+  /**
    * Initialize usage count from localStorage on mount.
-   * Must be in useEffect because localStorage is not available during SSR.
+   * Also capture any T018 Pro token from the success URL query param and from
+   * any previously stored localStorage value.
    *
    * NOTE (Builder 25, 2026-03-25): Previous code incorrectly used useState with a
    * side-effect callback; that pattern never runs. useEffect is the correct hook.
+   *
+   * T018 token capture (Builder 7, 2026-03-27):
+   * After Stripe checkout, success_url is `/?checkout=success&token=<uuid>`.
+   * We read the ?token= param here, persist it to localStorage, and clear it
+   * from the URL bar so users don't accidentally share it.
    */
   useEffect(() => {
     const count = getTodayGenerationCount();
     setTodayUsageCount(count);
     setHasReachedDailyFreeLimit(count >= DAILY_FREE_GENERATION_LIMIT);
+
+    // T018: capture ?token= from Stripe success redirect and persist to localStorage.
+    // This runs once on page mount so the token is available immediately for the
+    // first generate request without requiring a page reload.
+    const params = new URLSearchParams(window.location.search);
+    const urlToken = params.get("token");
+    if (urlToken) {
+      localStorage.setItem("tattoo_pro_token", urlToken);
+      setActiveProToken(urlToken);
+      // Clean the token from the URL bar so users don't accidentally copy-share it.
+      // history.replaceState is non-destructive — back-nav still works.
+      window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname + (params.toString().replace(`token=${urlToken}`, "").replace(/^&|&$/, "").replace(/^\?$/, "") ? "?" + params.toString().replace(`token=${urlToken}`, "").replace(/^&|&$/, "") : "")
+      );
+    } else {
+      // No token in URL — check if user has one stored from a prior session.
+      const storedToken = localStorage.getItem("tattoo_pro_token");
+      if (storedToken) {
+        setActiveProToken(storedToken);
+      }
+    }
   }, []);
 
   /**
@@ -321,9 +366,16 @@ export default function TattooGeneratorForm() {
     setGenerationError(null);
 
     try {
+      // T018: include Pro token header if the user has one stored from a prior
+      // Stripe checkout. The server checks Redis — active token bypasses IP rate
+      // limit entirely. Free-tier users simply don't send this header.
+      const proToken = activeProToken || localStorage.getItem("tattoo_pro_token");
       const apiResponse = await fetch("/api/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(proToken ? { "x-pro-token": proToken } : {}),
+        },
         body: JSON.stringify({
           tattooDescription: tattooDescriptionInput.trim(),
           style: selectedTattooStyle,

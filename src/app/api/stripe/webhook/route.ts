@@ -32,6 +32,16 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { activateToken } from "@/lib/subscription-store";
 
+/**
+ * runtime = "nodejs" ensures this route uses the Node.js runtime, not the Edge
+ * runtime. The Stripe SDK's constructEvent uses Node.js crypto APIs (Buffer,
+ * createHmac) internally; the Edge runtime lacks these APIs and would fail HMAC
+ * signature verification with a cryptic runtime error.
+ *
+ * This is the T018 fleet standard for all webhook routes.
+ */
+export const runtime = "nodejs";
+
 /** Required so Next.js reads the raw request body (not a pre-parsed stream) */
 export const dynamic = "force-dynamic";
 
