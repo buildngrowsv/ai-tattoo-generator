@@ -12,7 +12,9 @@ import FrequentlyAskedQuestionsSection from "@/components/FrequentlyAskedQuestio
 import InkAiSiteHeader from "@/components/InkAiSiteHeader";
 import InkAiSiteFooter from "@/components/InkAiSiteFooter";
 
-const siteUrl = "https://ai-tattoo-generator.vercel.app";
+const siteUrl =
+  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ||
+  "https://tattoo.symplyai.io";
 
 type PageProps = { params: Promise<{ locale: string }> };
 

@@ -13,7 +13,9 @@
 
 import type { MetadataRoute } from "next";
 
-const BASE_URL = "https://ai-tattoo-generator.vercel.app";
+const BASE_URL =
+  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ||
+  "https://tattoo.symplyai.io";
 
 export default function robots(): MetadataRoute.Robots {
   return {
