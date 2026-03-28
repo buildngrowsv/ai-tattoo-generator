@@ -19,7 +19,7 @@ const interFont = Inter({
   display: "swap",
 });
 
-const siteUrl = "https://ai-tattoo-generator.vercel.app";
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://tattoo.symplyai.io";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
