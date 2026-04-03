@@ -63,11 +63,13 @@ export async function generateMetadata({ params }: LayoutProps): Promise<Metadat
       locale: ogLocale,
       url: locale === "es" ? `${siteUrl}/es` : siteUrl,
       siteName: t("siteName"),
+      images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "TattooAI — AI Tattoo Design Generator" }],
     },
     twitter: {
       card: "summary_large_image",
       title: t("twitterTitle"),
       description: t("twitterDescription"),
+      images: ["/opengraph-image"],
     },
     robots: { index: true, follow: true },
   };
