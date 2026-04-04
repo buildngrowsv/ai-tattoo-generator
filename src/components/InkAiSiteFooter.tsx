@@ -42,6 +42,9 @@ export default async function InkAiSiteFooter() {
           <p className="text-xs text-muted-foreground/60 text-center sm:text-right">
             {t("copyright", { year: String(currentYear) })}
           </p>
+          <p className="text-xs text-muted-foreground/60 text-center sm:text-right mt-1">
+            <a href="https://symplyai.io" target="_blank" rel="noopener" className="hover:text-foreground transition-colors">Powered by SymplyAI</a>
+          </p>
         </div>
       </div>
     </footer>
