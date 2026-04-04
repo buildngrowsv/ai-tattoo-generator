@@ -13,6 +13,7 @@ import { routing } from "@/i18n/routing";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import "../globals.css";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import CookieConsent from "@/components/CookieConsent";
 
 const interFont = Inter({
   variable: "--font-inter",
@@ -159,6 +160,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
           <LanguageSwitcher locale={locale} />
           {children}
         </NextIntlClientProvider>
+        <CookieConsent />
       </body>
     </html>
   );
