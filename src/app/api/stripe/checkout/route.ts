@@ -35,7 +35,46 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createPendingToken } from "@/lib/subscription-store";
 
+// ---------------------------------------------------------------------------
+// Server-side IP rate limiter for checkout session creation.
+//
+// SECURITY FIX (2026-04-04): Prevents unauthenticated abuse of Stripe checkout
+// session creation. This repo has no auth library (no Better Auth / NextAuth),
+// so we use IP-based rate limiting — same pattern as the /api/generate route.
+// Limit: 10 checkout sessions per IP per hour.
+// ---------------------------------------------------------------------------
+const checkoutRateLimitMap = new Map<string, { count: number; windowStartMs: number }>();
+const CHECKOUT_LIMIT_PER_IP = 10;
+const CHECKOUT_WINDOW_MS = 60 * 60 * 1000;
+
+function checkCheckoutRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const existing = checkoutRateLimitMap.get(ip);
+  if (!existing || now - existing.windowStartMs > CHECKOUT_WINDOW_MS) {
+    checkoutRateLimitMap.set(ip, { count: 1, windowStartMs: now });
+    return true;
+  }
+  if (existing.count >= CHECKOUT_LIMIT_PER_IP) return false;
+  existing.count += 1;
+  return true;
+}
+
+function extractClientIp(request: NextRequest): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) return forwarded.split(",")[0].trim();
+  return "unknown";
+}
+
 export async function POST(request: NextRequest) {
+  // Rate limit checkout session creation — prevents unauthenticated abuse
+  const clientIp = extractClientIp(request);
+  if (!checkCheckoutRateLimit(clientIp)) {
+    return NextResponse.json(
+      { error: "Too many checkout requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   /**
    * Runtime guard — build-time env vars are undefined; guard at request time.
    * Trim trailing \n/whitespace from env var (defensive against echo-pipe artifacts).
