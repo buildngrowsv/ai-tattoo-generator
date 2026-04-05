@@ -24,6 +24,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: [],
+    exclude: ['**/node_modules/**', '**/dist/**', 'e2e/**', 'tests/e2e/**', 'tests/smoke/**', 'docs/demo/**/*.spec.ts'],
   },
   resolve: {
     alias: {
