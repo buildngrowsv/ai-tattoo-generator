@@ -12,8 +12,9 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import "../globals.css";
-import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import GoogleAnalyticsLoader from "@/components/GoogleAnalytics";
 import CookieConsent from "@/components/CookieConsent";
+import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 
 const interFont = Inter({
   variable: "--font-inter",
@@ -151,15 +152,14 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
         />
       </head>
       <body className="min-h-screen flex flex-col font-sans">
-        {/* GA4 — conditionally rendered; set NEXT_PUBLIC_GA_MEASUREMENT_ID in Vercel env to activate */}
-        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
-          <GoogleAnalytics trackingId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID!} />
-        )}
+        {/* GA4 with consent mode — GoogleAnalyticsLoader reads env var internally */}
+        <GoogleAnalyticsLoader />
         <NextIntlClientProvider messages={messages}>
           {/* Language switcher — EN | ES toggle, visible on all pages */}
           <LanguageSwitcher locale={locale} />
           {children}
         </NextIntlClientProvider>
+        <CookieConsentBanner />
         <CookieConsent />
       </body>
     </html>
