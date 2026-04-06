@@ -23,14 +23,15 @@
  * across the portfolio's strongest categories.
  */
 const DEFAULT_RELATED_TOOLS: RelatedTool[] = [
-  { name: "AI Logo Generator", url: "https://generateailogo.com" },
   { name: "AI Background Remover", url: "https://removebgapp.com" },
-  { name: "AI Hairstyle Generator", url: "https://hairstyle.symplyai.io" },
+  { name: "AI Logo Generator", url: "https://generateailogo.com" },
   { name: "AI Cartoon Generator", url: "https://cartoon.symplyai.io" },
+  { name: "AI Hairstyle Generator", url: "https://hairstyle.symplyai.io" },
   { name: "AI Interior Design", url: "https://airoomredesigner.com" },
+  { name: "GenFlix AI Video", url: "https://genflix.symplyai.io" },
+  { name: "BananaNano2Pro", url: "https://banananano2pro.com" },
   { name: "AI Face Swap", url: "https://faceswap.symplyai.io" },
   { name: "AI Tattoo Generator", url: "https://tattoo.symplyai.io" },
-  { name: "AI Product Photos", url: "https://aiproductphotomaker.com" },
 ];
 
 export interface RelatedTool {
@@ -90,6 +91,16 @@ export function RelatedToolsFooterSection({
           </a>
         ))}
       </div>
+      <p className="mt-3 text-xs text-gray-500">
+        <a
+          href="https://symplyai.io/tools/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-white transition-colors"
+        >
+          Powered by SymplyAI
+        </a>
+      </p>
     </div>
   );
 }
