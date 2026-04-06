@@ -27,7 +27,57 @@
 import { NextResponse } from "next/server";
 import { createPendingToken } from "@/lib/subscription-store";
 
+// ---------------------------------------------------------------------------
+// Server-side IP rate limiter for checkout session creation.
+//
+// SECURITY FIX (2026-04-06): This route was the ONLY checkout path in the
+// tattoo generator without any server-side protection. The fleet-standard
+// /api/stripe/checkout route had rate limiting (added 2026-04-04), but this
+// canonical /api/stripe/create-checkout route — the one the frontend actually
+// calls — was completely unguarded. An attacker could generate unlimited
+// cs_live_ Stripe Checkout sessions against our merchant account, potentially
+// triggering fraud flags, polluting the Stripe dashboard with abandoned
+// sessions, and consuming API rate limit quota.
+//
+// This repo has no auth library (no Better Auth / NextAuth), so IP-based rate
+// limiting is the strongest server-side guard available. Limit: 10 checkout
+// sessions per IP per hour — generous for legitimate users, blocks automated
+// abuse scripts.
+// ---------------------------------------------------------------------------
+const checkoutRateLimitMap = new Map<string, { count: number; windowStartMs: number }>();
+const CHECKOUT_LIMIT_PER_IP = 10;
+const CHECKOUT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+
+function checkCheckoutRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const existing = checkoutRateLimitMap.get(ip);
+  if (!existing || now - existing.windowStartMs > CHECKOUT_WINDOW_MS) {
+    checkoutRateLimitMap.set(ip, { count: 1, windowStartMs: now });
+    return true;
+  }
+  if (existing.count >= CHECKOUT_LIMIT_PER_IP) return false;
+  existing.count += 1;
+  return true;
+}
+
+function extractClientIp(request: Request): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) return forwarded.split(",")[0].trim();
+  return "unknown";
+}
+
 export async function POST(request: Request) {
+  // Rate limit checkout session creation — prevents unauthenticated abuse.
+  // Without this, any anonymous client can POST here and create unlimited
+  // Stripe Checkout sessions against our merchant account.
+  const clientIp = extractClientIp(request);
+  if (!checkCheckoutRateLimit(clientIp)) {
+    return NextResponse.json(
+      { error: "Too many checkout requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   try {
     let body: { plan?: string };
     try {
