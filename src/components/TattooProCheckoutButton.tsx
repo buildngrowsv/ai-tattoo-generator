@@ -17,8 +17,12 @@
  * Reference: PricingCheckoutButton in ai-chart-generator (commit 48daace, T35).
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Crown } from "lucide-react";
+import {
+  ga4TrackBeginCheckout,
+  ga4TrackViewPricing,
+} from "@/lib/analytics/ga4-web-events";
 
 interface TattooProCheckoutButtonProps {
   /** Text to display on the button */
@@ -29,9 +33,14 @@ export function TattooProCheckoutButton({ label }: TattooProCheckoutButtonProps)
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    ga4TrackViewPricing();
+  }, []);
+
   async function handleClick() {
     setError(null);
     setLoading(true);
+    ga4TrackBeginCheckout();
     try {
       const res = await fetch("/api/stripe/create-checkout", {
         method: "POST",

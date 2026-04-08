@@ -48,6 +48,10 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import {
+  ga4TrackTattooGenerationCompleted,
+  ga4TrackTattooGenerationRequested,
+} from "@/lib/analytics/ga4-web-events";
+import {
   Sparkles,
   Loader2,
   Download,
@@ -365,6 +369,12 @@ export default function TattooGeneratorForm() {
     setGenerationResult(null);
     setGenerationError(null);
 
+    ga4TrackTattooGenerationRequested({
+      placement: selectedBodyPlacement,
+      size: selectedTattooSize,
+      style: selectedTattooStyle,
+    });
+
     try {
       // T018: include Pro token header if the user has one stored from a prior
       // Stripe checkout. The server checks Redis — active token bypasses IP rate
@@ -403,6 +413,11 @@ export default function TattooGeneratorForm() {
          */
         setGenerationResult(responseData as GenerationResult);
         incrementTodayGenerationCount();
+        ga4TrackTattooGenerationCompleted({
+          placement: selectedBodyPlacement,
+          size: selectedTattooSize,
+          style: selectedTattooStyle,
+        });
         const newCount = getTodayGenerationCount();
         setTodayUsageCount(newCount);
         setHasReachedDailyFreeLimit(newCount >= DAILY_FREE_GENERATION_LIMIT);

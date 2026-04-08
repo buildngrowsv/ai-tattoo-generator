@@ -39,19 +39,31 @@ const MAX_FREE_GENERATIONS_PER_IP = 5;
 /** Duration constant for retryAfter fallback when Upstash reset time is unavailable */
 const RATE_LIMIT_WINDOW_MS = 24 * 60 * 60 * 1000;
 
+const GENERATE_RATE_LIMIT_CONFIG = {
+  prefix: "ai-tattoo-generator:api-generate",
+  maxRequests: MAX_FREE_GENERATIONS_PER_IP,
+  window: "24 h",
+  fallbackWindowMs: RATE_LIMIT_WINDOW_MS,
+} as const;
+
 /**
  * Redis key prefix for Upstash. Using a product-specific prefix keeps keys
  * isolated in case the same Upstash database is shared across the clone fleet
  * (all clones share UPSTASH_REDIS_REST_URL / TOKEN in the org Upstash account).
  */
-const RATE_LIMIT_PREFIX = "ai-tattoo-generator:api-generate";
+export interface SlidingWindowRateLimitConfig {
+  prefix: string;
+  maxRequests: number;
+  window: Parameters<typeof Ratelimit.slidingWindow>[1];
+  fallbackWindowMs: number;
+}
 
 // ---------------------------------------------------------------------------
 // Lazy singleton Redis + Ratelimit clients
 // ---------------------------------------------------------------------------
 
 let cachedRedisClient: Redis | null = null;
-let cachedRatelimitClient: Ratelimit | null = null;
+const cachedRatelimitClients = new Map<string, Ratelimit>();
 
 // ---------------------------------------------------------------------------
 // Public interfaces — both patterns used across the clone fleet
@@ -114,9 +126,13 @@ export function extractClientIpAddress(request: Request): string {
  * environment variables are not present. The null return is intentional —
  * callers must treat it as "blocked" to maintain fail-closed posture.
  */
-function getUpstashRateLimiter(): Ratelimit | null {
-  if (cachedRatelimitClient) {
-    return cachedRatelimitClient;
+function getUpstashRateLimiter(
+  config: SlidingWindowRateLimitConfig
+): Ratelimit | null {
+  const cacheKey = `${config.prefix}:${config.maxRequests}:${String(config.window)}`;
+  const existingClient = cachedRatelimitClients.get(cacheKey);
+  if (existingClient) {
+    return existingClient;
   }
 
   const redisRestUrl = process.env.UPSTASH_REDIS_REST_URL;
@@ -139,14 +155,15 @@ function getUpstashRateLimiter(): Ratelimit | null {
       token: redisRestToken,
     });
 
-  cachedRatelimitClient = new Ratelimit({
+  const rateLimitClient = new Ratelimit({
     redis: cachedRedisClient,
-    limiter: Ratelimit.slidingWindow(MAX_FREE_GENERATIONS_PER_IP, "24 h"),
+    limiter: Ratelimit.slidingWindow(config.maxRequests, config.window),
     analytics: false,
-    prefix: RATE_LIMIT_PREFIX,
+    prefix: config.prefix,
   });
 
-  return cachedRatelimitClient;
+  cachedRatelimitClients.set(cacheKey, rateLimitClient);
+  return rateLimitClient;
 }
 
 // ---------------------------------------------------------------------------
@@ -164,13 +181,20 @@ function getUpstashRateLimiter(): Ratelimit | null {
 export async function checkIpRateLimit(
   ipAddress: string
 ): Promise<RateLimitResult> {
-  const rateLimiter = getUpstashRateLimiter();
+  return checkSlidingWindowIpRateLimit(ipAddress, GENERATE_RATE_LIMIT_CONFIG);
+}
+
+export async function checkSlidingWindowIpRateLimit(
+  ipAddress: string,
+  config: SlidingWindowRateLimitConfig
+): Promise<RateLimitResult> {
+  const rateLimiter = getUpstashRateLimiter(config);
 
   if (!rateLimiter) {
     return {
       allowed: false,
       remainingRequests: 0,
-      retryAfterMs: RATE_LIMIT_WINDOW_MS,
+      retryAfterMs: config.fallbackWindowMs,
       rejectionReason: "rate_limiter_not_configured",
     };
   }
@@ -202,8 +226,15 @@ export async function checkIpRateLimit(
 export async function checkServerSideRateLimit(
   request: Request | NextRequest
 ): Promise<ServerSideRateLimitResult> {
+  return checkServerSideRateLimitWithConfig(request, GENERATE_RATE_LIMIT_CONFIG);
+}
+
+export async function checkServerSideRateLimitWithConfig(
+  request: Request | NextRequest,
+  config: SlidingWindowRateLimitConfig
+): Promise<ServerSideRateLimitResult> {
   const clientIpAddress = extractClientIp(request);
-  const result = await checkIpRateLimit(clientIpAddress);
+  const result = await checkSlidingWindowIpRateLimit(clientIpAddress, config);
 
   return {
     allowed: result.allowed,
