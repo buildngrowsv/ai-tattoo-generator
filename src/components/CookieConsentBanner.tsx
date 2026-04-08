@@ -36,15 +36,22 @@ import {
 import { isPublicGaMeasurementConfigured } from "@/lib/ga4-public-env";
 
 /**
- * Applies Consent Mode update for analytics_storage only (GA4). Ad surfaces stay denied
- * in `GoogleAnalytics` defaults unless we add Google Ads later.
+ * Applies Google Consent Mode v2 update for all four required parameters.
+ *
+ * Google requires analytics_storage, ad_storage, ad_user_data, and ad_personalization
+ * to be set together for full Consent Mode v2 compliance. Even if we do not run Google Ads
+ * today, setting these ensures the gtag config is future-proof and passes CMP audits.
  */
 function applyAnalyticsConsentToGtag(choice: CookieConsentChoice): void {
   if (typeof window === "undefined" || typeof window.gtag !== "function") {
     return;
   }
+  const value = choice === "accepted" ? "granted" : "denied";
   window.gtag("consent", "update", {
-    analytics_storage: choice === "accepted" ? "granted" : "denied",
+    analytics_storage: value,
+    ad_storage: value,
+    ad_user_data: value,
+    ad_personalization: value,
   });
 }
 
