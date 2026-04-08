@@ -11,7 +11,8 @@
     "verify": "npm run build && echo '✅ Build passes — safe to deploy'",
     "test:smoke": "playwright test tests/smoke",
     "test:e2e": "playwright test tests/e2e",
-    "test:all": "playwright test"
+    "test:all": "playwright test",
+    "env:validate": "node scripts/validate-env-configuration.mjs"
   },
   "dependencies": {
     "@fal-ai/client": "^1.2.1",
