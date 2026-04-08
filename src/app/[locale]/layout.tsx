@@ -35,7 +35,7 @@ type LayoutProps = {
 
 export async function generateMetadata({ params }: LayoutProps): Promise<Metadata> {
   const { locale } = await params;
-  if (!routing.locales.includes(locale as "en" | "es")) {
+  if (!routing.locales.includes(locale as "en" | "es" | "fr" | "de" | "pt")) {
     notFound();
   }
   const t = await getTranslations({ locale, namespace: "Meta" });
@@ -133,7 +133,7 @@ const jsonLdFaq = {
 
 export default async function LocaleLayout({ children, params }: LayoutProps) {
   const { locale } = await params;
-  if (!routing.locales.includes(locale as "en" | "es")) {
+  if (!routing.locales.includes(locale as "en" | "es" | "fr" | "de" | "pt")) {
     notFound();
   }
   setRequestLocale(locale);

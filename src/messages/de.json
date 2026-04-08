@@ -1,0 +1,187 @@
+{
+  "Meta": {
+    "title": "KI-Tattoo-Design-Generator - Kostenloser KI-Tattoo-Ersteller | InkAI",
+    "description": "Entwerfen Sie Ihr perfektes Tattoo mit KI. Beschreiben Sie Ihre Idee, wählen Sie einen Stil und erhalten Sie in Sekunden ein individuelles Tattoo-Design. Kostenlos testen — 10+ Stile inkl. Traditional, Aquarell, Geometrisch, Japanisch und mehr.",
+    "keywordList": [
+      "KI Tattoo Generator",
+      "Tattoo Design KI",
+      "KI Tattoo Ersteller",
+      "individuelles Tattoo Design",
+      "Tattoo Ideen Generator",
+      "KI Tattoo Kunst",
+      "Tattoo Flash Generator",
+      "Tattoo Design Tool",
+      "kostenloser Tattoo Designer",
+      "Tattoo Stil Generator"
+    ],
+    "ogTitle": "KI-Tattoo-Design-Generator - Individuelles Tattoo mit KI erstellen",
+    "ogDescription": "Beschreiben Sie Ihr Traumtattoo und sehen Sie es mit KI zum Leben erwachen. Wählen Sie aus 10+ Stilen. Kostenlos, sofortige Ergebnisse.",
+    "siteName": "InkAI - KI-Tattoo-Design-Generator",
+    "twitterTitle": "KI-Tattoo-Design-Generator | InkAI",
+    "twitterDescription": "Individuelles Tattoo mit KI entwerfen. 10+ Stile, sofortige Ergebnisse. Kostenlos testen."
+  },
+  "Header": {
+    "goPro": "Pro werden",
+    "localeEn": "EN",
+    "localeEs": "ES"
+  },
+  "Footer": {
+    "privacy": "Datenschutzrichtlinie",
+    "terms": "Nutzungsbedingungen",
+    "refund": "Rückerstattungsrichtlinie",
+    "contact": "Kontakt",
+    "copyright": "© {year} InkAI. Alle Rechte vorbehalten."
+  },
+  "Home": {
+    "trustBadge": "KI-gestütztes Tattoo-Design",
+    "heroTitleBefore": "KI-Tattoo-Design",
+    "heroTitleAccent": "Generator",
+    "heroSubtitle": "Beschreiben Sie Ihr Traumtattoo und sehen Sie es mit KI zum Leben erwachen. Wählen Sie aus 10 Stilen, wählen Sie Ihre Platzierung und erhalten Sie in Sekunden ein individuelles Design. Kostenlos.",
+    "whyTitleBefore": "Warum",
+    "whyTitleAccent": "InkAI",
+    "whySubtitle": "Der schnellste Weg, Ihre Tattoo-Ideen zu visualisieren, bevor Sie ins Studio gehen.",
+    "featureAiTitle": "KI-gestütztes Design",
+    "featureAiBody": "Fortschrittliche KI-Modelle erstellen einzigartige, professionelle Tattoo-Kunstwerke aus Ihren Textbeschreibungen. Jedes Design ist einmalig.",
+    "featureStylesTitle": "10+ Tattoo-Stile",
+    "featureStylesBody": "Traditional, Aquarell, Japanisch, Geometrisch, Minimalistisch und mehr. Jeder Stil produziert authentische, stilspezifische Ergebnisse.",
+    "featureInstantTitle": "Sofortige Vorschau",
+    "featureInstantBody": "Sehen Sie Ihr Tattoo-Design in Sekunden, nicht Tagen. Iterieren Sie schnell über Ideen, bevor Sie sich auf ein dauerhaftes Kunstwerk festlegen.",
+    "statDesigns": "Erstellte Designs",
+    "statTime": "Generierungszeit",
+    "statStyles": "Tattoo-Stile",
+    "statPrivate": "Privat und sicher",
+    "statDesignsValue": "50K+",
+    "statTimeValue": "~10s",
+    "statStylesValue": "10+",
+    "statPrivateValue": "100%"
+  },
+  "Pricing": {
+    "sectionTitleBefore": "Einfache,",
+    "sectionTitleAccent": "transparente Preise",
+    "sectionSubtitle": "Kostenlos starten. Upgraden für unbegrenzte Designs.",
+    "freeTitle": "Kostenlos",
+    "freeSubtitle": "Ausprobieren",
+    "freePer": "/Monat",
+    "freeCta": "Aktueller Plan",
+    "proBadge": "AM BELIEBTESTEN",
+    "proTitle": "Pro",
+    "proSubtitle": "Für Künstler und Enthusiasten",
+    "proPer": "/Monat",
+    "proCta": "Zu Pro upgraden — 9,90€/Monat",
+    "freeFeatures": [
+      "3 Designs pro Tag",
+      "10 Tattoo-Stile",
+      "Alle Körperplatzierungen",
+      "Standardauflösung",
+      "Als PNG herunterladen"
+    ],
+    "proFeatures": [
+      "Unbegrenzte Designs",
+      "10 Tattoo-Stile",
+      "Alle Körperplatzierungen",
+      "Ausgabe in hoher Auflösung",
+      "Als PNG herunterladen",
+      "Prioritätsgenerierung",
+      "Kommerzielle Nutzungslizenz",
+      "Frühzeitiger Zugang zu neuen Stilen"
+    ]
+  },
+  "Faq": {
+    "headingBefore": "Häufig gestellte",
+    "headingAccent": "Fragen",
+    "subtitle": "Alles, was Sie über die KI-Tattoo-Design-Generierung wissen müssen.",
+    "items": [
+      {
+        "q": "Was ist ein KI-Tattoo-Generator?",
+        "a": "Ein KI-Tattoo-Generator verwendet künstliche Intelligenz, um individuelle Tattoo-Designs basierend auf Ihrer Textbeschreibung zu erstellen. Sie beschreiben Ihre Idee — wie 'ein Wolf, der den Mond anheult, umgeben von Pinien' — wählen einen Stil und die KI erstellt in Sekunden ein einzigartiges Design."
+      },
+      {
+        "q": "Wie funktioniert der KI-Tattoo-Design-Prozess?",
+        "a": "Ganz einfach: 1) Beschreiben Sie Ihre Tattoo-Idee. 2) Wählen Sie Ihren bevorzugten Stil aus 10 Optionen. 3) Wählen Sie Platzierung und Größe. 4) Klicken Sie auf 'Design generieren' und erhalten Sie Ihr individuelles Tattoo in 10-15 Sekunden."
+      },
+      {
+        "q": "Ist der KI-Tattoo-Generator kostenlos?",
+        "a": "Ja! Sie können täglich bis zu 3 kostenlose Tattoo-Designs ohne Anmeldung generieren. Für unbegrenzte Designs, Prioritätsgenerierung, hochauflösende Ausgabe und kommerzielle Nutzungsrechte upgraden Sie auf Pro für 9,90€/Monat."
+      },
+      {
+        "q": "Kann ich KI-generierte Designs zu einem echten Tätowierer bringen?",
+        "a": "Absolut! Viele unserer Nutzer verwenden KI-generierte Designs als Referenzmaterial für ihre Tätowierer. Die Designs dienen als detaillierter Ausgangspunkt, den Ihr Künstler verfeinern und anpassen kann."
+      },
+      {
+        "q": "Welche Tattoo-Stile sind verfügbar?",
+        "a": "Wir unterstützen 10 beliebte Tattoo-Stile: Traditional, Aquarell, Geometrisch, Japanisch, Minimalistisch, Blackwork, Tribal, Realism, Neo-Traditional und Dotwork."
+      },
+      {
+        "q": "Wie gut ist die Qualität der KI-generierten Designs?",
+        "a": "Die KI produziert professionelle Tattoo-Designs, die als Referenzmaterial geeignet sind. Die Qualität hängt von Ihrer Beschreibung ab — je detaillierter, desto besser die Ergebnisse. Wir verwenden fortschrittliche KI-Modelle (FLUX), die speziell für künstlerische Ausgabe optimiert sind."
+      },
+      {
+        "q": "Sind meine Tattoo-Designs privat?",
+        "a": "Ja. Ihre Beschreibungen und generierten Designs werden sicher verarbeitet und nicht dauerhaft gespeichert oder mit anderen Nutzern geteilt."
+      },
+      {
+        "q": "Kann ich generierte Designs kommerziell nutzen?",
+        "a": "Free-Tier-Designs sind nur für den persönlichen Gebrauch. Pro-Abonnenten (9,90€/Monat) erhalten eine kommerzielle Nutzungslizenz für Tattoo-Studio-Portfolios, Merchandise, Drucke und andere kommerzielle Zwecke."
+      }
+    ]
+  },
+  "Form": {
+    "cardTitle": "Ihr Tattoo entwerfen",
+    "cardSubtitle": "Beschreiben Sie Ihre Idee und lassen Sie KI sie zum Leben erwecken",
+    "describeLabel": "Beschreiben Sie Ihre Tattoo-Idee",
+    "placeholder": "Ein Phönix, der aus Flammen aufsteigt mit ausgebreiteten Flügeln, umgeben von Kirschblüten...",
+    "charHint": "{count}/1000 — Seien Sie so beschreibend wie möglich für bessere Ergebnisse",
+    "styleLabel": "Tattoo-Stil",
+    "placementLabel": "Körperplatzierung",
+    "sizeLabel": "Tattoo-Größe",
+    "upgradeCta": "Zu Pro upgraden — Unbegrenzte Designs",
+    "generating": "Ihr Tattoo-Design wird generiert...",
+    "generate": "Design generieren",
+    "usageLine": "{used} von {limit} kostenlosen Generierungen heute verwendet",
+    "usageRemaining": " — {n} verbleibend",
+    "resultTitle": "Ihr Tattoo-Design",
+    "download": "Herunterladen",
+    "viewPrompt": "Verwendeten KI-Prompt anzeigen",
+    "errMissingDescription": "Beschreibung fehlt",
+    "errMissingDescriptionMsg": "Bitte beschreiben Sie Ihre Tattoo-Idee vor der Generierung.",
+    "errDailyLimit": "Tageslimit erreicht",
+    "errDailyLimitMsg": "Sie haben heute alle {limit} kostenlosen Generierungen verbraucht. Upgraden Sie auf Pro für unbegrenzte Designs für 9,90€/Monat.",
+    "errNetwork": "Netzwerkfehler",
+    "errNetworkMsg": "Der Generierungsserver ist nicht erreichbar. Überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
+    "Styles": {
+      "Traditional": "Traditional",
+      "Watercolor": "Aquarell",
+      "Geometric": "Geometrisch",
+      "Japanese": "Japanisch",
+      "Minimalist": "Minimalistisch",
+      "Blackwork": "Blackwork",
+      "Tribal": "Tribal",
+      "Realism": "Realism",
+      "Neo-Traditional": "Neo-Traditional",
+      "Dotwork": "Dotwork"
+    },
+    "Placements": {
+      "Arm": "Arm",
+      "Forearm": "Unterarm",
+      "Back": "Rücken",
+      "Chest": "Brust",
+      "Leg": "Bein",
+      "Ankle": "Knöchel",
+      "Shoulder": "Schulter",
+      "Neck": "Hals",
+      "Wrist": "Handgelenk",
+      "Ribs": "Rippen"
+    },
+    "Sizes": {
+      "Small": "Klein",
+      "Medium": "Mittel",
+      "Large": "Groß"
+    }
+  },
+  "PricingPage": {
+    "metaTitle": "Preise | InkAI — KI-Tattoo-Design-Generator",
+    "metaDescription": "Vergleichen Sie Free- und Pro-Pläne für InkAI. Starten Sie mit 3 kostenlosen Designs täglich oder upgraden Sie für unbegrenzte KI-Tattoo-Generierungen.",
+    "heroTitle": "InkAI Preise",
+    "heroSubtitle": "Kostenlos starten, upgraden für unbegrenzte Generierungen und kommerzielle Rechte."
+  }
+}
