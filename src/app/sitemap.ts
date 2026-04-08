@@ -17,7 +17,7 @@
 import type { MetadataRoute } from "next";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ||
+  process.env.NEXT_PUBLIC_APP_URL?.trim()?.replace(/\/$/, "") ||
   "https://tattoo.symplyai.io";
 
 export default function sitemap(): MetadataRoute.Sitemap {
