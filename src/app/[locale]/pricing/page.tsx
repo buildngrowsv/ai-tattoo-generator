@@ -36,6 +36,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         "x-default": `${siteUrl}/pricing`,
       },
     },
+    openGraph: {
+      title: t("metaTitle"),
+      description: t("metaDescription"),
+      url: locale === "es" ? `${siteUrl}/es/pricing` : `${siteUrl}/pricing`,
+      type: "website",
+      images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+    },
     robots: { index: true, follow: true },
   };
 }

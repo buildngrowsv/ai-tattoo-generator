@@ -47,6 +47,7 @@ export const metadata: Metadata = {
       "Midjourney is great for general art, but InkAI is purpose-built for tattoo design with tattoo-specific styles and placement guidance.",
     url: "https://tattoo.symplyai.io/vs/midjourney",
     type: "website",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
 };
 

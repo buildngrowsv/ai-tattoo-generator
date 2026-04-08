@@ -1,6 +1,20 @@
-export const metadata = {
+import type { Metadata } from "next";
+
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://tattoo.symplyai.io";
+
+export const metadata: Metadata = {
   title: "Privacy Policy | InkAI",
   description: "Privacy policy for InkAI.",
+  alternates: {
+    canonical: `${SITE_URL}/privacy`,
+  },
+  openGraph: {
+    title: "Privacy Policy | InkAI",
+    description: "Privacy policy for InkAI.",
+    url: `${SITE_URL}/privacy`,
+    type: "website",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+  },
 };
 
 export default function PrivacyPage() {

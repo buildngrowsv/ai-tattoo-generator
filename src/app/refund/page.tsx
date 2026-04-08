@@ -1,6 +1,20 @@
-export const metadata = {
+import type { Metadata } from "next";
+
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://tattoo.symplyai.io";
+
+export const metadata: Metadata = {
   title: "Refund Policy | InkAI",
   description: "Refund policy for InkAI.",
+  alternates: {
+    canonical: `${SITE_URL}/refund`,
+  },
+  openGraph: {
+    title: "Refund Policy | InkAI",
+    description: "Refund policy for InkAI.",
+    url: `${SITE_URL}/refund`,
+    type: "website",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+  },
 };
 
 export default function RefundPage() {

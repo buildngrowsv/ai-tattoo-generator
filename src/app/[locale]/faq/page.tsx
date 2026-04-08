@@ -53,6 +53,8 @@ const faqs = [
 /*  Metadata                                                          */
 /* ------------------------------------------------------------------ */
 
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://tattoo.symplyai.io";
+
 export const metadata: Metadata = {
   title: "FAQ — AI Tattoo Generator | Common Questions Answered",
   description:
@@ -65,6 +67,17 @@ export const metadata: Metadata = {
     "AI tattoo for tattoo artist",
     "custom tattoo design AI",
   ],
+  alternates: {
+    canonical: `${SITE_URL}/faq`,
+  },
+  openGraph: {
+    title: "FAQ — AI Tattoo Generator | Common Questions Answered",
+    description:
+      "Frequently asked questions about the AI Tattoo Generator. Learn about supported tattoo styles, customization, resolution, pricing, and how to use AI-generated designs with your tattoo artist.",
+    url: `${SITE_URL}/faq`,
+    type: "website",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+  },
 };
 
 /* ------------------------------------------------------------------ */

@@ -54,6 +54,7 @@ export const metadata: Metadata = {
       "50+ tattoo ideas across 8 styles. Preview any design with AI before you get inked.",
     url: "https://tattoo.symplyai.io/guide/tattoo-design-ideas",
     type: "article",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
 };
 

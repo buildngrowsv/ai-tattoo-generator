@@ -53,6 +53,7 @@ export const metadata: Metadata = {
       "Purpose-built tattoo AI tools compared side-by-side. Styles, pricing, quality, and ease of use — find the right tool for your tattoo design.",
     url: "https://tattoo.symplyai.io/vs/tattoosai",
     type: "website",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
 };
 
