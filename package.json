@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 3847",
-    "build": "next build",
+    "build": "node scripts/validate-env-configuration.mjs && next build",
     "start": "next start --port 3847",
     "lint": "eslint",
     "test": "vitest run",
