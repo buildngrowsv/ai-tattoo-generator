@@ -6,7 +6,8 @@ import { defineConfig, devices } from "@playwright/test";
  * pane1774 swarm — Scout 16, 2026-03-27
  */
 export default defineConfig({
-  testDir: "./tests",
+  testDir: ".",
+  testMatch: ["tests/**/*.spec.ts", "e2e/**/*.spec.ts"],
   timeout: 60_000,
   fullyParallel: false,
   workers: 1,
