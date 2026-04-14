@@ -39,10 +39,24 @@ export interface SeoUseCaseConfig {
   readonly steps: string[];
 }
 
+export interface SeoBestConfig {
+  /** URL-safe slug used in the route path, e.g. "free-background-remover" -> /best/free-background-remover */
+  readonly slug: string;
+  /** Full page title, e.g. "Best Free Background Remover in 2026" */
+  readonly title: string;
+  /** 1-2 sentence description of what this listicle page covers */
+  readonly description: string;
+  /** 5 product-specific features that justify ranking on this page */
+  readonly features: string[];
+}
+
+
 export interface SeoPageConfig {
   readonly competitors: SeoCompetitorConfig[];
   readonly audiences: SeoAudienceConfig[];
   readonly useCases: SeoUseCaseConfig[];
+  /** Best-of listicle entries — generates /best/[slug] pages */
+  readonly bestPages: SeoBestConfig[];
 }
 
 export const SEO_PAGES_CONFIG: SeoPageConfig = {
@@ -155,5 +169,47 @@ export const SEO_PAGES_CONFIG: SeoPageConfig = {
         "Download concepts to discuss with your tattoo artist for feasibility",
       ],
     }
+  ],
+
+  bestPages: [
+    {
+      slug: "free-tattoo",
+      title: "Best Free Tattoo in 2026",
+      description:
+        "Compare the best free AI tattoo tools available in 2026. Find tools that work without watermarks, signups, or hidden costs.",
+      features: [
+        "Free daily AI tattoo design generation with no credit card required",
+        "Multiple styles including traditional, neo-traditional, blackwork, and fine-line",
+        "High-contrast outputs optimized for skin transfer and stencil use",
+        "High-resolution downloads suitable for printing at actual tattoo size",
+        "No watermarks on free-tier tattoo design outputs",
+      ],
+    },
+    {
+      slug: "tattoo-for-tattoo-enthusiasts",
+      title: "Best Tattoo for Tattoo Enthusiasts in 2026",
+      description:
+        "The best AI tattoo tools for tattoo enthusiasts. Compare features, pricing, and output quality for your specific workflow needs.",
+      features: [
+        "Virtual placement preview on body area photos for realistic size reference",
+        "Artist-shareable reference sheets with multiple angle views",
+        "Custom text integration with hand-lettering and script style options",
+        "Symbol combination tools for building meaningful personal designs",
+        "Style transfer from a reference photo to match your tattoo artist's portfolio",
+      ],
+    },
+    {
+      slug: "tattoo-no-signup",
+      title: "Best Tattoo with No Signup in 2026",
+      description:
+        "AI tattoo tools that work instantly without creating an account, entering email, or providing payment information.",
+      features: [
+        "No account required — design tattoos without registering",
+        "No email or age verification required to access free designs",
+        "No credit card needed for free tattoo design generation",
+        "No watermarks on free tattoo outputs",
+        "No app download — browser-based AI tattoo design tool",
+      ],
+    },
   ],
 };
