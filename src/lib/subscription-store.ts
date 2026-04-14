@@ -170,7 +170,7 @@ export async function createPendingToken(): Promise<string> {
  * If the token was never stored (no Redis at checkout time), creates it as
  * "active" directly. Idempotent — safe to call multiple times.
  */
-export async function activateToken(token: string): Promise<void> {
+export async function activateToken(token: string): Promise<boolean> {
   const redis = getRedisClient();
   if (!redis) {
     console.warn(
