@@ -11,8 +11,8 @@ import PricingSectionWithTiers from "@/components/PricingSectionWithTiers";
 import FrequentlyAskedQuestionsSection from "@/components/FrequentlyAskedQuestionsSection";
 import InkAiSiteHeader from "@/components/InkAiSiteHeader";
 import InkAiSiteFooter from "@/components/InkAiSiteFooter";
-import {
 import { SeoInternalLinks } from "@/components/SeoInternalLinks";
+import {
   Sparkles,
   Palette,
   Zap,
