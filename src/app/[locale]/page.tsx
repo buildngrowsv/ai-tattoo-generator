@@ -12,6 +12,7 @@ import FrequentlyAskedQuestionsSection from "@/components/FrequentlyAskedQuestio
 import InkAiSiteHeader from "@/components/InkAiSiteHeader";
 import InkAiSiteFooter from "@/components/InkAiSiteFooter";
 import {
+import { SeoInternalLinks } from "@/components/SeoInternalLinks";
   Sparkles,
   Palette,
   Zap,
@@ -133,7 +134,14 @@ export default async function HomePage({ params }: PageProps) {
 
         <PricingSectionWithTiers />
         <FrequentlyAskedQuestionsSection />
-      </main>
+      
+      {/* Internal SEO links — distributes homepage PageRank to pSEO pages */}
+      <section className="py-12 px-6 border-t border-white/5">
+        <div className="max-w-5xl mx-auto">
+          <SeoInternalLinks />
+        </div>
+      </section>
+</main>
 
       <InkAiSiteFooter />
     </div>
