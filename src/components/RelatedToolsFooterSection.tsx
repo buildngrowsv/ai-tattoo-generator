@@ -23,15 +23,19 @@
  * across the portfolio's strongest categories.
  */
 const DEFAULT_RELATED_TOOLS: RelatedTool[] = [
-  { name: "AI Background Remover", url: "https://removebgapp.com" },
-  { name: "AI Logo Generator", url: "https://generateailogo.com" },
-  { name: "AI Cartoon Generator", url: "https://cartoon.symplyai.io" },
-  { name: "AI Hairstyle Generator", url: "https://hairstyle.symplyai.io" },
-  { name: "AI Interior Design", url: "https://airoomredesigner.com" },
+  /* Tier 1 flagships — highest priority for cross-linking because they have
+     the best conversion paths and Google authority needs.
+     Updated: nexus-strat-7439, 2026-04-14 — added all 6 custom-domain
+     double-down products (was missing manga, upscaler, product photo). */
   { name: "GenFlix AI Video", url: "https://genflix.symplyai.io" },
-  { name: "BananaNano2Pro", url: "https://banananano2pro.com" },
-  { name: "AI Face Swap", url: "https://faceswap.symplyai.io" },
-  { name: "AI Tattoo Generator", url: "https://tattoo.symplyai.io" },
+  { name: "Banananano2Pro", url: "https://banananano2pro.com" },
+  { name: "AI Logo Generator", url: "https://generateailogo.com" },
+  { name: "AI Background Remover", url: "https://removebgapp.com" },
+  { name: "AI Image Upscaler", url: "https://smartaiupscaler.com" },
+  { name: "AI Manga Generator", url: "https://mangaartai.com" },
+  { name: "AI Product Photos", url: "https://aiproductphotomaker.com" },
+  { name: "AI Interior Design", url: "https://airoomredesigner.com" },
+  { name: "All AI Tools", url: "https://symplyai.io/tools/" },
 ];
 
 export interface RelatedTool {
