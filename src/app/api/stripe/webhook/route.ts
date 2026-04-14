@@ -123,10 +123,14 @@ export async function POST(request: Request) {
       const checkoutSession = event.data.object as Stripe.Checkout.Session;
       const subscriptionToken = checkoutSession.client_reference_id;
       if (subscriptionToken) {
-        // activateToken is fire-and-forget (returns void, logs errors internally).
-        // Previous code checked the void return value — always falsy — causing
-        // every checkout to return 500 with infinite Stripe retries.
-        await activateToken(subscriptionToken);
+        const activated = await activateToken(subscriptionToken);
+        if (!activated) {
+          console.error("[stripe-webhook] CRITICAL: activateToken failed — returning 500 so Stripe retries");
+          return NextResponse.json(
+            { received: true, processed: false, error: "Token activation failed" },
+            { status: 500 }
+          );
+        }
         console.log(
           `[webhook] checkout.session.completed — activated token`,
           { sessionId: checkoutSession.id, tokenFragment: subscriptionToken.slice(0, 8) }
