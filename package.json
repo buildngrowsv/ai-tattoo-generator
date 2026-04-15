@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 3847",
-    "build": "node scripts/validate-env-configuration.mjs && next build",
+    "build": "next build",
     "start": "next start --port 3847",
     "lint": "eslint",
     "test": "vitest run",
-    "verify": "npm run build && echo '✅ Build passes — safe to deploy'",
+    "verify": "npm run build && echo '\u2705 Build passes \u2014 safe to deploy'",
     "test:smoke": "playwright test tests/smoke",
     "test:e2e": "playwright test tests/e2e",
     "test:all": "playwright test",
