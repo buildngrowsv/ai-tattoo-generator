@@ -72,7 +72,7 @@ export function SeoCrossLinks({
   if (currentCategory !== "vs" && competitors.length > 0) {
     crossLinkSections.push({
       label: "Compare",
-      links: competitors.slice(0, 2).map((c) => ({
+      links: competitors.slice(0, 2).map((c: { slug: string; name: string }) => ({
         href: `/vs/${c.slug}`,
         text: `${productName} vs ${c.name}`,
       })),
@@ -82,7 +82,7 @@ export function SeoCrossLinks({
   if (currentCategory !== "for" && audiences.length > 0) {
     crossLinkSections.push({
       label: "Built For",
-      links: audiences.slice(0, 2).map((a) => ({
+      links: audiences.slice(0, 2).map((a: { slug: string; name: string }) => ({
         href: `/for/${a.slug}`,
         text: `${productName} for ${a.name}`,
       })),
@@ -92,7 +92,7 @@ export function SeoCrossLinks({
   if (currentCategory !== "use-cases" && useCases.length > 0) {
     crossLinkSections.push({
       label: "How-To Guides",
-      links: useCases.slice(0, 2).map((u) => ({
+      links: useCases.slice(0, 2).map((u: { slug: string; name: string }) => ({
         href: `/use-cases/${u.slug}`,
         text: u.name,
       })),
@@ -102,7 +102,7 @@ export function SeoCrossLinks({
   if (currentCategory !== "best" && bestPages.length > 0) {
     crossLinkSections.push({
       label: "Best Of",
-      links: bestPages.slice(0, 2).map((b) => ({
+      links: bestPages.slice(0, 2).map((b: { slug: string; title: string }) => ({
         href: `/best/${b.slug}`,
         text: b.title,
       })),
