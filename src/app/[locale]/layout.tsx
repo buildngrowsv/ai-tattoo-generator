@@ -183,6 +183,20 @@ const jsonLdHowTo = {
   ],
 };
 
+
+/**
+ * BreadcrumbList JSON-LD — breadcrumb navigation in Google search results.
+ * Improves click-through rate by showing site hierarchy directly in SERP.
+ */
+const jsonLdBreadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://tattoo.symplyai.io" },
+    { "@type": "ListItem", position: 2, name: "Pricing", item: "https://tattoo.symplyai.io/pricing" },
+  ],
+};
+
 export default async function LocaleLayout({ children, params }: LayoutProps) {
   const { locale } = await params;
   if (!routing.locales.includes(locale as "en" | "es" | "fr" | "de" | "pt")) {
@@ -211,6 +225,10 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrganization) }}
+        />
+              <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
         />
       </head>
       <body className="min-h-screen flex flex-col font-sans">
