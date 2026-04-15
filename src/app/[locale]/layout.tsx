@@ -197,6 +197,23 @@ const jsonLdBreadcrumb = {
   ],
 };
 
+
+/**
+ * WebSite JSON-LD — establishes site identity in Google search results
+ * and enables sitelinks searchbox eligibility.
+ */
+const jsonLdWebSite = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "TattooForge AI",
+  url: "https://tattoo.symplyai.io",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: "https://tattoo.symplyai.io/?q={search_term_string}",
+    "query-input": "required name=search_term_string",
+  },
+};
+
 export default async function LocaleLayout({ children, params }: LayoutProps) {
   const { locale } = await params;
   if (!routing.locales.includes(locale as "en" | "es" | "fr" | "de" | "pt")) {
@@ -229,6 +246,10 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
               <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
+        />
+              <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebSite) }}
         />
       </head>
       <body className="min-h-screen flex flex-col font-sans">
