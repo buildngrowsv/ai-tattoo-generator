@@ -16,6 +16,8 @@ import { siteConfig } from "@/config/site";
 import { PRODUCT_CONFIG } from "@/lib/config";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
+import { SeoCrossLinks } from "@/components/SeoCrossLinks";
+import { SeoInternalLinks } from "@/components/SeoInternalLinks";
 const canonicalUrl = `${siteConfig.siteUrl}/vs`;
 
 export const metadata: Metadata = {
@@ -84,6 +86,28 @@ export default function VsIndexPage() {
         ]}
       />
 
+
+      {/* ItemList JSON-LD — tells Google this is a structured collection page */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: metadata.title,
+            url: canonicalUrl,
+            mainEntity: {
+              "@type": "ItemList",
+              itemListElement: configCompetitors.map((comp, index) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                name: `vs ${comp.name}`,
+                url: `${siteConfig.siteUrl}/vs/${comp.slug}`,
+              })),
+            },
+          }),
+        }}
+      />
       <main className="min-h-screen bg-surface-primary text-text-primary">
         <nav className="fixed top-0 left-0 right-0 z-50 bg-surface-primary/80 backdrop-blur-xl border-b border-white/5">
           <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -173,6 +197,10 @@ export default function VsIndexPage() {
                 Design Your Tattoo Free
               </Link>
             </section>
+
+            {/* Cross-links and internal links for crawlability */}
+            <SeoCrossLinks currentCategory="vs" currentSlug="" />
+            <SeoInternalLinks />
           </div>
         </div>
       </main>
