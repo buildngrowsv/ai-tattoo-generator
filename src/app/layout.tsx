@@ -50,10 +50,57 @@ export const viewport: Viewport = {
 };
 
 
+/**
+ * FAQPage JSON-LD — enables FAQ rich results in Google SERPs.
+ * Product-specific questions about AI tattoo design.
+ */
+const jsonLdFAQ = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "How does AI Tattoo Generator work?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Describe your tattoo idea in words, choose a style (Traditional, Watercolor, Geometric, Japanese, Minimalist, and more), and our AI generates a custom tattoo design in seconds. Use it as inspiration or take the design directly to your tattoo artist.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Is AI Tattoo Generator free?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes, InkAI offers a free tier with 3 tattoo designs per day. Paid plans start at $9.99/month for unlimited designs, all 10+ styles, and high-resolution downloads.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What tattoo styles are available?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "InkAI offers 10+ styles including Traditional American, Japanese Irezumi, Watercolor, Geometric, Minimalist, Blackwork, Neo-Traditional, Tribal, Dotwork, and Realistic. Each style produces authentic results matching real tattoo aesthetics.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Can I take the AI design to a tattoo artist?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Absolutely. Many users generate designs with InkAI and bring them to their tattoo artist as a reference or starting point. The high-resolution output makes it easy for artists to work from the design.",
+      },
+    },
+  ],
+};
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <GoogleAnalyticsLoader />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFAQ) }}
+      />
       {children}
     </>
   );
