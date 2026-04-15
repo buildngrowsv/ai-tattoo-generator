@@ -26,6 +26,8 @@ import { getSeoPageConfig, getProductSlug, buildFaqJsonLd } from "@/lib/seo-page
 import { PRODUCT_CONFIG } from "@/lib/config";
 import { siteConfig } from "@/config/site";
 
+import { SeoCrossLinks } from "@/components/SeoCrossLinks";
+import { SeoInternalLinks } from "@/components/SeoInternalLinks";
 // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-explicit-any
 let seoConfig: any = {};
 try {
@@ -232,6 +234,10 @@ export default async function BestForPage({ params }: BestPageProps) {
                 {ctaText}
               </Link>
             </section>
+
+            {/* Internal links for crawlability */}
+            <SeoCrossLinks currentCategory="best" currentSlug={slug} />
+            <SeoInternalLinks />
           </div>
         </div>
       </main>
