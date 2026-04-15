@@ -4,7 +4,7 @@
  * `setRequestLocale` enables static rendering for each locale segment.
  * Metadata uses translated strings + hreflang alternates for EN/ES SEO.
  */
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
@@ -31,6 +31,16 @@ export function generateStaticParams() {
 type LayoutProps = {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+    { media: "(prefers-color-scheme: light)", color: "#7c3aed" },
+  ],
 };
 
 export async function generateMetadata({ params }: LayoutProps): Promise<Metadata> {

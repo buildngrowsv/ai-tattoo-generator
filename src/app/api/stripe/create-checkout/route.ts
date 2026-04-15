@@ -158,6 +158,7 @@ export async function POST(request: Request) {
       `client_reference_id=${encodeURIComponent(subscriptionToken)}`,
       `metadata[plan]=${encodeURIComponent(plan)}`,
       `metadata[source]=tattoo-generator`,
+    `subscription_data[metadata][proToken]=${encodeURIComponent(subscriptionToken)}`,
     ];
 
     const stripeResponse = await fetch("https://api.stripe.com/v1/checkout/sessions", {
