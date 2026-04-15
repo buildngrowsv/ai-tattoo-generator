@@ -129,7 +129,7 @@ export async function POST(request: Request) {
           // retry loops when Redis was not provisioned — customer paid but token
           // never activated. See continuous-improvement-master.md root cause table.
           console.error("[stripe-webhook] activateToken failed — Redis unavailable. " +
-            "Returning 200 to prevent infinite retries.", { token: subscriptionToken });
+            "Returning 200 to prevent infinite retries.", { token: subscriptionToken.slice(0, 8) + "…" });
         }
         console.log(
           `[webhook] checkout.session.completed — activated token`,
