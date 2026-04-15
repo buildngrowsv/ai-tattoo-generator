@@ -96,6 +96,42 @@ export const SEO_PAGES_CONFIG: SeoPageConfig = {
         "No body placement preview or sizing tools",
         "Free tier is very restrictive — essentially a demo",
       ],
+    },
+    {
+      slug: "inkme-ai",
+      name: "InkMe AI",
+      description: "InkMe AI is an AI-powered tattoo design platform that generates custom tattoo artwork from text prompts with style customization options.",
+      pricing: "Free trial, $8.99/mo for Premium",
+      weaknesses: [
+        "Limited style library compared to dedicated design tools",
+        "No option to adjust placement on body photos",
+        "Resolution quality drops on complex multi-element designs",
+        "Mobile app experience is clunky compared to web version",
+      ],
+    },
+    {
+      slug: "dall-e",
+      name: "DALL-E (OpenAI)",
+      description: "DALL-E is OpenAI's general-purpose AI image generator that can create tattoo-style artwork from detailed text descriptions.",
+      pricing: "Free limited credits, $20/mo for ChatGPT Plus",
+      weaknesses: [
+        "Not purpose-built for tattoos — requires very specific prompting to get tattoo-style output",
+        "No tattoo-specific style presets or body placement tools",
+        "Generated images often need post-processing to be tattoo-ready",
+        "Text in tattoo designs is frequently garbled or misspelled",
+      ],
+    },
+    {
+      slug: "nightcafe-studio",
+      name: "NightCafe Studio",
+      description: "NightCafe Studio is an AI art generator platform supporting multiple AI models that can create tattoo-inspired artwork and designs.",
+      pricing: "Free 5 credits/day, plans from $5.99/mo",
+      weaknesses: [
+        "General-purpose art tool with no tattoo-specific workflow",
+        "Results require significant curation to find tattoo-appropriate outputs",
+        "No built-in body placement visualization or sizing guides",
+        "Credit system means costs add up quickly for iterative design work",
+      ],
     }
   ],
 
