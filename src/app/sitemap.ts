@@ -183,6 +183,32 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   /**
+   * Blog posts — comparison articles, tutorials, and guides that target
+   * mid-funnel organic keywords not covered by pSEO pages.
+   */
+  let blogSitemapEntries: MetadataRoute.Sitemap = [];
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { BLOG_POSTS } = require("@/app/blog/blog-posts");
+    blogSitemapEntries = [
+      {
+        url: `${BASE_URL}/blog`,
+        lastModified,
+        changeFrequency: "weekly" as const,
+        priority: 0.8,
+      },
+      ...BLOG_POSTS.map((post: { slug: string }) => ({
+        url: `${BASE_URL}/blog/${post.slug}`,
+        lastModified,
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      })),
+    ];
+  } catch {
+    // Blog module not available yet — skip blog entries.
+  }
+
+  /**
    * Deduplicate URLs — the new /vs/ pages from seo-pages.ts config may overlap
    * with legacy /vs/ pages from seo-config.json. Use a Set to ensure each URL
    * appears exactly once in the final sitemap.
@@ -195,6 +221,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...newSeoUseCaseEntries,
     ...seoSitemapEntries,
     ...programmaticSeoEntries,
+    ...blogSitemapEntries,
   ];
 
   const seenUrls = new Set<string>();
