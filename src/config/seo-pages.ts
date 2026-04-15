@@ -132,6 +132,42 @@ export const SEO_PAGES_CONFIG: SeoPageConfig = {
         "No built-in body placement visualization or sizing guides",
         "Credit system means costs add up quickly for iterative design work",
       ],
+    },
+    {
+      slug: "fotor-ai-tattoo-generator",
+      name: "Fotor AI Tattoo Generator",
+      description: "Fotor AI Tattoo Generator creates tattoo concepts from text prompts inside Fotor's broader design suite with style presets and quick export options.",
+      pricing: "Free limited, Pro from $8.99/mo",
+      weaknesses: [
+        "General design platform first, so tattoo-specific controls are shallow",
+        "Outputs often need cleanup before they look stencil-ready",
+        "No placement preview workflow on body reference photos",
+        "Style consistency drops when you iterate on multi-element concepts",
+      ],
+    },
+    {
+      slug: "artguru-ai-tattoo-generator",
+      name: "Artguru AI Tattoo Generator",
+      description: "Artguru AI Tattoo Generator turns prompts into tattoo-style artwork with a browser-based workflow aimed at casual users exploring custom ink ideas.",
+      pricing: "Free limited generations, paid plans from $9.99/mo",
+      weaknesses: [
+        "Free tier runs out quickly during design exploration",
+        "Prompt results can feel generic without strong style guidance",
+        "No artist-facing export workflow for sizing and refinement",
+        "Limited support for combining references with tattoo-specific constraints",
+      ],
+    },
+    {
+      slug: "canva-ai-tattoo-generator",
+      name: "Canva AI Tattoo Generator",
+      description: "Canva's AI image tools can generate tattoo-style concepts inside its design editor, making it a common DIY option for simple tattoo mockups.",
+      pricing: "Free limited, Canva Pro $14.99/mo",
+      weaknesses: [
+        "Not purpose-built for tattoo design, so prompts need more manual tuning",
+        "No dedicated tattoo presets, placement previews, or stencil-ready workflow",
+        "Generated text and fine line details often need heavy manual correction",
+        "Best results require extra editing steps inside Canva after generation",
+      ],
     }
   ],
 
