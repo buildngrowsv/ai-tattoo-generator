@@ -20,8 +20,8 @@ import { default as GoogleAnalyticsLoader } from "@/components/GoogleAnalytics";
  */
 export const metadata: Metadata = {
   metadataBase: new URL("https://tattoo.symplyai.io"),
-  title: "AI Tattoo Generator",
-  description: "AI Tattoo Generator — AI-powered tool. Free to try, no sign-up required.",
+  title: "AI Tattoo Design Generator - Free AI Tattoo Maker | InkAI",
+  description: "Design your perfect tattoo with AI. Describe your idea, choose a style, and get a custom tattoo design in seconds. Free to try — 10+ styles including Traditional, Watercolor, Geometric, Japanese, and more.",
   alternates: {
     canonical: "https://tattoo.symplyai.io",
   },
