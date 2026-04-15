@@ -129,7 +129,7 @@ export function SeoInternalLinks() {
               {bestPages.map((bestPageEntry) => (
                 <li key={bestPageEntry.slug}>
                   <Link
-                    href={\`/best/\${bestPageEntry.slug}\`}
+                    href={`/best/${bestPageEntry.slug}`}
                     className="text-sm text-text-muted hover:text-brand-400 transition-colors"
                   >
                     {bestPageEntry.title}
