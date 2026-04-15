@@ -20,6 +20,7 @@ import { siteConfig } from "@/config/site";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import { SeoCrossLinks } from "@/components/SeoCrossLinks";
 
+import { SeoInternalLinks } from "@/components/SeoInternalLinks";
 const canonicalUrl = `${siteConfig.siteUrl}/for`;
 
 export const metadata: Metadata = {
@@ -165,6 +166,7 @@ export default function ForHubPage() {
 
             {/* Cross-links component */}
             <SeoCrossLinks currentCategory="for" currentSlug="" />
+            <SeoInternalLinks />
           </div>
         </div>
       </main>
