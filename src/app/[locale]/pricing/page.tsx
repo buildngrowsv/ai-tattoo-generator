@@ -47,12 +47,45 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+const pricingJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "InkAI",
+  applicationCategory: "MultimediaApplication",
+  operatingSystem: "Web",
+  url: `${siteUrl}/pricing`,
+  offers: [
+    {
+      "@type": "Offer",
+      name: "Free",
+      price: "0",
+      priceCurrency: "USD",
+      description: "3 tattoo designs per day",
+      availability: "https://schema.org/InStock",
+    },
+    {
+      "@type": "Offer",
+      name: "Pro",
+      price: "9.90",
+      priceCurrency: "USD",
+      description: "Unlimited tattoo designs, priority processing",
+      availability: "https://schema.org/InStock",
+      priceValidUntil: "2027-12-31",
+    },
+  ],
+};
+
 export default async function PricingPage({ params }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("PricingPage");
 
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingJsonLd) }}
+      />
     <div className="flex flex-col min-h-screen">
       <InkAiSiteHeader />
       <main className="flex-1 pt-12 pb-8">
@@ -65,5 +98,6 @@ export default async function PricingPage({ params }: PageProps) {
       </main>
       <InkAiSiteFooter />
     </div>
+    </>
   );
 }
