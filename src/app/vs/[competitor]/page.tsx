@@ -46,6 +46,12 @@ interface CompetitorPageProps {
  * Each competitor slug in the config becomes a static HTML page at build
  * time. No server-side rendering overhead at request time.
  */
+/**
+ * Reject unknown slugs — Next.js returns 404 immediately without
+ * invoking the page function. Prevents Vercel serverless hangs.
+ */
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return SEO_PAGES_CONFIG.competitors.map((competitorEntry) => ({
     competitor: competitorEntry.slug,

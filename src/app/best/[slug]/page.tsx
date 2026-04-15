@@ -43,6 +43,12 @@ interface BestPageProps {
  * Generates static params at build time so Next.js pre-renders all
  * /best/ pages as static HTML. No server-side rendering needed.
  */
+/**
+ * Reject unknown slugs — Next.js returns 404 immediately without
+ * invoking the page function. Prevents Vercel serverless hangs.
+ */
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const config = getSeoPageConfig();
   return config.bestForPages.map((page) => ({ slug: page.slug }));

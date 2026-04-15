@@ -47,6 +47,12 @@ interface UseCasePageProps {
  * generateStaticParams — tells Next.js which /use-cases/ pages to pre-render.
  * Each use case slug in the config becomes a static HTML page at build time.
  */
+/**
+ * Reject unknown slugs — Next.js returns 404 immediately without
+ * invoking the page function. Prevents Vercel serverless hangs.
+ */
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return SEO_PAGES_CONFIG.useCases.map((useCaseEntry) => ({
     "use-case": useCaseEntry.slug,
