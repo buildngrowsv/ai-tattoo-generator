@@ -47,6 +47,28 @@ export default function ForHubPage() {
         ]}
       />
 
+      {/* ItemList JSON-LD — tells Google this is a structured collection page */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: `${productName} for Every Workflow`,
+            url: canonicalUrl,
+            mainEntity: {
+              "@type": "ItemList",
+              itemListElement: audiences.map((audience, index) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                name: `For ${audience.name}`,
+                url: `${siteConfig.siteUrl}/for/${audience.slug}`,
+              })),
+            },
+          }),
+        }}
+      />
+
       <main className="min-h-screen bg-surface-primary text-text-primary">
         {/* Navigation */}
         <nav className="fixed top-0 left-0 right-0 z-50 bg-surface-primary/80 backdrop-blur-xl border-b border-white/5">

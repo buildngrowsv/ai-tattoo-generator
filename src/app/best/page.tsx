@@ -54,6 +54,28 @@ export default function BestIndexPage() {
         ]}
       />
 
+      {/* ItemList JSON-LD — tells Google this is a structured collection page */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: metadata.title,
+            url: canonicalUrl,
+            mainEntity: {
+              "@type": "ItemList",
+              itemListElement: bestPages.map((page, index) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                name: `Best for ${page.audience}`,
+                url: `${siteConfig.siteUrl}/best/${page.slug}`,
+              })),
+            },
+          }),
+        }}
+      />
+
       <main className="min-h-screen bg-surface-primary text-text-primary">
         {/* Navigation bar — matches [slug] page nav */}
         <nav className="fixed top-0 left-0 right-0 z-50 bg-surface-primary/80 backdrop-blur-xl border-b border-white/5">
