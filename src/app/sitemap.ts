@@ -123,6 +123,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
    * This reflects their value as long-tail traffic drivers that support the
    * primary conversion pages.
    */
+
+  /**
+   * pSEO hub index pages — parent directories for content clusters.
+   * These hub pages link to all child routes and provide crawl entry points.
+   * Priority 0.8: above pSEO child pages (0.7) as they consolidate link equity.
+   */
+  const hubPaths = ["/for", "/use-cases", "/best", "/vs"];
+
+  const hubSitemapEntries: MetadataRoute.Sitemap = hubPaths.map((hubPath) => ({
+    url: `${BASE_URL}${hubPath}`,
+    lastModified,
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
+
   const newSeoCompetitorEntries: MetadataRoute.Sitemap =
     SEO_PAGES_CONFIG.competitors.map((competitorEntry) => ({
       url: `${BASE_URL}/vs/${competitorEntry.slug}`,
@@ -174,6 +189,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
    */
   const allEntries = [
     ...coreSitemapEntries,
+    ...hubSitemapEntries,
     ...newSeoCompetitorEntries,
     ...newSeoAudienceEntries,
     ...newSeoUseCaseEntries,
