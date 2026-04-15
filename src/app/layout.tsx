@@ -9,7 +9,7 @@
  * Builder 25 (2026-03-25): T13 SEO + i18n (EN/ES) for pane1774 clone fleet.
  */
 import type { ReactNode } from "react";
-import type { Metadata } from "next";
+import type { Metadata, Viewport} from "next";
 import { default as GoogleAnalyticsLoader } from "@/components/GoogleAnalytics";
 
 
@@ -34,6 +34,21 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
 };
+
+/**
+ * Viewport configuration — ensures proper mobile rendering and theme-color
+ * for pSEO pages served outside [locale] routing.
+ */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+    { media: "(prefers-color-scheme: light)", color: "#7c3aed" },
+  ],
+};
+
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
