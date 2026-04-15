@@ -146,7 +146,7 @@ export default function BestIndexPage() {
             </section>
 
             {/* Internal links for crawlability */}
-            <SeoCrossLinks />
+            <SeoCrossLinks currentCategory="best" currentSlug="" />
             <SeoInternalLinks />
           </div>
         </div>
