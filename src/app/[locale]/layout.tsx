@@ -142,6 +142,30 @@ const jsonLdFaq = {
 };
 
 /**
+ * Organization JSON-LD — links this product to the SymplyAI parent organization.
+ * Improves E-E-A-T signals for Google search and enables Knowledge Panel eligibility.
+ * Added 2026-04-15 (fleet-wide Organization schema rollout).
+ */
+const jsonLdOrganization = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "TattooForge AI",
+  url: siteUrl,
+  logo: `${siteUrl}/icon.png`,
+  description: "AI tattoo generator — design custom tattoos with AI.",
+  parentOrganization: {
+    "@type": "Organization",
+    name: "SymplyAI",
+    url: "https://symplyai.io",
+  },
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    url: `${siteUrl}/contact`,
+  },
+};
+
+/**
  * HowTo JSON-LD — enables "How to" rich results in Google SERPs.
  * Targets "how to design tattoos with AI" queries with step-by-step instructions.
  */
@@ -182,6 +206,11 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdHowTo) }}
+        />
+        {/* Organization schema — E-E-A-T signals + Knowledge Panel eligibility */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrganization) }}
         />
       </head>
       <body className="min-h-screen flex flex-col font-sans">
