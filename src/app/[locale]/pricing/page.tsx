@@ -75,6 +75,15 @@ const pricingJsonLd = {
   ],
 };
 
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+    { "@type": "ListItem", position: 2, name: "Pricing", item: `${siteUrl}/pricing` },
+  ],
+};
+
 export default async function PricingPage({ params }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -82,6 +91,10 @@ export default async function PricingPage({ params }: PageProps) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingJsonLd) }}
