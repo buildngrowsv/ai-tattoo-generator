@@ -31,6 +31,7 @@ import { SEO_PAGES_CONFIG } from "@/config/seo-pages";
 import { PRODUCT_CONFIG } from "@/lib/config";
 import { siteConfig } from "@/config/site";
 import { SeoInternalLinks } from "@/components/SeoInternalLinks";
+import { SeoCrossLinks } from "@/components/SeoCrossLinks";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
 interface AudiencePageProps {
@@ -403,6 +404,8 @@ export default async function AudienceLandingPage({
             {/* -------------------------------------------------------- */}
             {/* Internal Links — all SEO page categories                  */}
             {/* -------------------------------------------------------- */}
+            {/* Cross-category links */}
+            <SeoCrossLinks currentCategory="for" currentSlug={audienceSlug} />
             <SeoInternalLinks />
           </div>
         </div>

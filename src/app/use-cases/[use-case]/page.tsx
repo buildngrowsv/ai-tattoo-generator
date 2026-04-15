@@ -37,6 +37,7 @@ import { SEO_PAGES_CONFIG } from "@/config/seo-pages";
 import { PRODUCT_CONFIG } from "@/lib/config";
 import { siteConfig } from "@/config/site";
 import { SeoInternalLinks } from "@/components/SeoInternalLinks";
+import { SeoCrossLinks } from "@/components/SeoCrossLinks";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 
 interface UseCasePageProps {
@@ -435,6 +436,8 @@ export default async function UseCaseGuidePage({
             {/* -------------------------------------------------------- */}
             {/* Internal Links — all SEO page categories                  */}
             {/* -------------------------------------------------------- */}
+            {/* Cross-category links */}
+            <SeoCrossLinks currentCategory="use-cases" currentSlug={useCaseSlug} />
             <SeoInternalLinks />
           </div>
         </div>
