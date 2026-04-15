@@ -141,6 +141,24 @@ const jsonLdFaq = {
   ],
 };
 
+/**
+ * HowTo JSON-LD — enables "How to" rich results in Google SERPs.
+ * Targets "how to design tattoos with AI" queries with step-by-step instructions.
+ */
+const jsonLdHowTo = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: "How to Design Custom Tattoos with AI",
+  description: "Use TattooAI to create unique, personalized tattoo designs with AI in seconds.",
+  totalTime: "PT30S",
+  tool: { "@type": "HowToTool", name: "TattooAI (tattoo.symplyai.io)" },
+  step: [
+    { "@type": "HowToStep", position: 1, name: "Describe your tattoo idea", text: "Enter a description of the tattoo you want — style, subject, placement, and mood." },
+    { "@type": "HowToStep", position: 2, name: "AI creates your design", text: "Our AI generates a unique tattoo design tailored to your description and preferred style." },
+    { "@type": "HowToStep", position: 3, name: "Download your tattoo design", text: "Preview the design and download in high resolution to share with your tattoo artist." },
+  ],
+};
+
 export default async function LocaleLayout({ children, params }: LayoutProps) {
   const { locale } = await params;
   if (!routing.locales.includes(locale as "en" | "es" | "fr" | "de" | "pt")) {
@@ -159,6 +177,11 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }}
+        />
+        {/* HowTo schema — step-by-step rich results in Google SERPs */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdHowTo) }}
         />
       </head>
       <body className="min-h-screen flex flex-col font-sans">
