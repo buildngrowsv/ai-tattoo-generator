@@ -96,6 +96,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/privacy",
     "/terms-of-service",
     "/refund-policy",
+    "/contact",
+    "/about",
   ];
 
   /**
