@@ -24,10 +24,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://tattoo.symplyai.io";
+
 export const metadata: Metadata = {
-  title: "Payment Successful",
+  title: "Payment Successful | InkAI",
   description: "Your payment was successful. Start using your Pro features now.",
   robots: { index: false, follow: false },
+  alternates: {
+    canonical: `${SITE_URL}/checkout/success`,
+  },
+  openGraph: {
+    title: "Payment Successful | InkAI",
+    description: "Your payment was successful. Start using your Pro features now.",
+    url: `${SITE_URL}/checkout/success`,
+    type: "website",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+  },
 };
 
 export default function CheckoutSuccessPage() {
